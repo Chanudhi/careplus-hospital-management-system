@@ -131,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Mock credentials validation
         // Any password matching our format is accepted for demo purposes
         const mockCredentials = {
-          'patient': { email: 'patient@hospital.com', name: 'John Smith' },
+          'patient': { email: 'patient@hospital.com', name: 'Chanudhi Aluthge' },
           'admin': { email: 'admin@hospital.com', name: 'Admin User' },
           'doctor': { email: 'doctor@hospital.com', name: 'Dr. Silva' },
           'nurse': { email: 'nurse@hospital.com', name: 'Nurse Clara' }

@@ -246,7 +246,7 @@
                   <span class="text-success">[21:10:45]</span> DB Backup succeeded: HMS_BACKUP_2026.sql
                 </div>
                 <div class="p-2 border rounded" style="background-color: var(--bg-body);">
-                  <span class="text-warning">[19:44:12]</span> Patient <strong>John Smith</strong> updated profile details.
+                  <span class="text-warning">[19:44:12]</span> Patient <strong>Chanudhi Aluthge</strong> updated profile details.
                 </div>
                 <div class="p-2 border rounded" style="background-color: var(--bg-body);">
                   <span class="text-primary">[18:30:00]</span> Doctor <strong>Dr. Silva</strong> registered check-out.
@@ -498,8 +498,8 @@
         </div>
         <div class="modal-body">
           <div class="text-center mb-3">
-            <div class="profile-avatar-placeholder mx-auto mb-2" id="recAvatar" style="width: 50px; height: 50px; font-size: 1.4rem;">JS</div>
-            <h5 class="h6 mb-0" id="recPatientName">John Smith</h5>
+            <div class="profile-avatar-placeholder mx-auto mb-2" id="recAvatar" style="width: 50px; height: 50px; font-size: 1.4rem;">CA</div>
+            <h5 class="h6 mb-0" id="recPatientName">Chanudhi Aluthge</h5>
             <span class="text-muted" style="font-size: 0.8rem;" id="recPatientAge">Age: 35</span>
           </div>
 
@@ -570,10 +570,16 @@
           { name: 'Admin User', email: 'admin@hospital.com', role: 'Administrator', status: 'Active', date: '2026-01-01' },
           { name: 'Dr. Silva', email: 'doctor@hospital.com', role: 'Doctor', status: 'Active', date: '2026-01-10' },
           { name: 'Nurse Clara', email: 'nurse@hospital.com', role: 'Nurse', status: 'Active', date: '2026-02-14' },
-          { name: 'John Smith', email: 'patient@hospital.com', role: 'Patient', status: 'Active', date: '2026-03-20' }
+          { name: 'Chanudhi Aluthge', email: 'patient@hospital.com', role: 'Patient', status: 'Active', date: '2026-03-20' }
         ];
         if (!localStorage.getItem('hms_users')) {
           localStorage.setItem('hms_users', JSON.stringify(defaultUsers));
+        } else {
+          const existingUsers = JSON.parse(localStorage.getItem('hms_users') || '[]');
+          const updatedUsers = existingUsers.map(user => user.email === 'patient@hospital.com' ? { ...user, name: 'Chanudhi Aluthge' } : user);
+          if (JSON.stringify(existingUsers) !== JSON.stringify(updatedUsers)) {
+            localStorage.setItem('hms_users', JSON.stringify(updatedUsers));
+          }
         }
 
         // Seeding doctors roster directory
@@ -590,24 +596,36 @@
 
         // Seeding patient registry records directory
         const defaultPatients = [
-          { name: 'John Smith', age: 35, blood: 'A+', bp: '120/80', weight: '71kg', allergies: 'Penicillin', history: 'Hypertension, Asthma, Diabetes Type-II', medications: 'Metformin, Vitamin D' },
+          { name: 'Chanudhi Aluthge', age: 23, blood: 'A+', bp: '120/80', weight: '71kg', allergies: 'Penicillin', history: 'Hypertension, Asthma, Diabetes Type-II', medications: 'Metformin, Vitamin D' },
           { name: 'Emily Lawson', age: 28, blood: 'O-', bp: '115/75', weight: '62kg', allergies: 'None', history: 'Seasonal Allergies', medications: 'None' },
           { name: 'Marcus Harris', age: 42, blood: 'B+', bp: '130/85', weight: '88kg', allergies: 'Aspirin', history: 'Hypercholesterolemia', medications: 'Atorvastatin' },
           { name: 'Sarah Cooper', age: 31, blood: 'AB+', bp: '118/72', weight: '58kg', allergies: 'Sulfa Drugs', history: 'Hypothyroidism', medications: 'Levothyroxine' }
         ];
         if (!localStorage.getItem('hms_patients')) {
           localStorage.setItem('hms_patients', JSON.stringify(defaultPatients));
+        } else {
+          const existingPatients = JSON.parse(localStorage.getItem('hms_patients') || '[]');
+          const updatedPatients = existingPatients.map(patient => patient.name === 'John Smith' ? { ...patient, name: 'Chanudhi Aluthge', age: 23 } : patient);
+          if (JSON.stringify(existingPatients) !== JSON.stringify(updatedPatients)) {
+            localStorage.setItem('hms_patients', JSON.stringify(updatedPatients));
+          }
         }
 
         // Seeding billing ledger payments directory
         const defaultPayments = [
-          { id: 'INV-1094', name: 'John Smith', treat: 'Cardiology Consultation', amount: 4500, method: 'PayPal', status: 'Paid', date: '2026-07-11' },
+          { id: 'INV-1094', name: 'Chanudhi Aluthge', treat: 'Cardiology Consultation', amount: 4500, method: 'PayPal', status: 'Paid', date: '2026-07-11' },
           { id: 'INV-1093', name: 'Robert Downey', treat: 'Neurology Consultation', amount: 12000, method: 'Visa Card', status: 'Unpaid', date: '2026-07-10' },
           { id: 'INV-1092', name: 'Jessica Alba', treat: 'Pediatrics Treatment', amount: 2800, method: 'MasterCard', status: 'Paid', date: '2026-07-09' },
           { id: 'INV-1091', name: 'Emily Lawson', treat: 'General Checkup Check', amount: 1500, method: 'PayPal', status: 'Paid', date: '2026-07-09' }
         ];
         if (!localStorage.getItem('hms_payments')) {
           localStorage.setItem('hms_payments', JSON.stringify(defaultPayments));
+        } else {
+          const existingPayments = JSON.parse(localStorage.getItem('hms_payments') || '[]');
+          const updatedPayments = existingPayments.map(payment => payment.name === 'John Smith' ? { ...payment, name: 'Chanudhi Aluthge' } : payment);
+          if (JSON.stringify(existingPayments) !== JSON.stringify(updatedPayments)) {
+            localStorage.setItem('hms_payments', JSON.stringify(updatedPayments));
+          }
         }
 
         // Make sure outstanding payments sync updates on billing status
@@ -879,7 +897,7 @@
 
           return `
             <tr>
-              <td class="fw-medium">John Smith</td>
+              <td class="fw-medium">Chanudhi Aluthge</td>
               <td>${app.doctor}</td>
               <td>${app.department}</td>
               <td><strong>${app.date}</strong> &bull; ${app.time}</td>
