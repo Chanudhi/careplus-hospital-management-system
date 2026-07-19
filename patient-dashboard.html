@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Access medical files, schedule clinic checkups, download lab reports, and manage outstanding balances.">
+  <title>Patient Dashboard - Hospital Management System</title>
+  <!-- Bootstrap 5 CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link href="css/style.css" rel="stylesheet">
+  <link href="css/dashboard.css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Mobile Responsive Top Header Bar -->
+  <header class="mobile-header">
+    <div class="d-flex align-items-center gap-2">
+      <i class="bi bi-heart-pulse-fill text-primary" style="font-size: 1.5rem;" aria-hidden="true"></i>
+      <span class="fw-bold" style="font-family: 'Outfit', sans-serif;">CarePlus</span>
+    </div>
+    <button class="mobile-toggle-btn" id="mobileSidebarToggle" aria-label="Toggle Navigation Sidebar">
+      <i class="bi bi-list"></i>
+    </button>
+  </header>
+
+  <!-- Sidebar Overlay for Mobile -->
+  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+  <div class="dashboard-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="d-inline-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); width: 35px; height: 35px; border-radius: 10px;">
+          <i class="bi bi-heart-pulse-fill text-white" style="font-size: 1.1rem;" aria-hidden="true"></i>
+        </div>
+        <h2 class="sidebar-brand">CarePlus</h2>
+      </div>
+
+      <nav class="sidebar-menu">
+        <a href="patient-dashboard.html" class="sidebar-link active" aria-current="page">
+          <i class="bi bi-grid-fill" aria-hidden="true"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="appointment.html" class="sidebar-link">
+          <i class="bi bi-calendar-event" aria-hidden="true"></i>
+          <span>Appointments</span>
+        </a>
+        <a href="medical-records.html" class="sidebar-link">
+          <i class="bi bi-file-earmark-medical" aria-hidden="true"></i>
+          <span>Medical Records</span>
+        </a>
+        <a href="payment.html" class="sidebar-link">
+          <i class="bi bi-credit-card" aria-hidden="true"></i>
+          <span>Payments</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="themeToggle" class="theme-toggle-btn w-100 justify-content-center" aria-label="Toggle Dark/Light Mode">
+          <i class="bi bi-moon-fill" aria-hidden="true"></i>
+          <span>Dark Mode</span>
+        </button>
+        <a href="index.html" class="sidebar-link text-danger logout-btn" id="logoutBtn" style="border: 1px solid var(--border-color); text-align: center; justify-content: center; gap: 8px;">
+          <i class="bi bi-box-arrow-left" aria-hidden="true"></i>
+          <span>Logout</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Content Top Bar (Search, Profile summary, Notifications) -->
+      <section class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+        <div>
+          <h1 class="h3 mb-1" id="welcomeUser">Welcome Back, John Smith</h1>
+          <p class="text-muted mb-0">Overview of your healthcare, reports and bills.</p>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+          <!-- Notification Bell -->
+          <div class="dropdown">
+            <button class="btn btn-outline-secondary position-relative" type="button" id="notificationDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 50%; width: 42px; height: 42px; padding: 0;" aria-label="Notification center">
+              <i class="bi bi-bell" aria-hidden="true"></i>
+              <span class="notification-badge" id="notifBellBadge"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end p-0 card-premium" aria-labelledby="notificationDropdown" style="width: 320px; max-height: 400px; overflow-y: auto;">
+              <li class="p-3 border-bottom d-flex justify-content-between align-items-center">
+                <span class="fw-bold">Notifications</span>
+                <button class="btn btn-sm btn-link p-0 text-decoration-none text-primary" id="clearNotifBtn" style="font-size: 0.8rem;">Clear All</button>
+              </li>
+              <div id="notificationList">
+                <!-- Loaded from localStorage -->
+              </div>
+            </ul>
+          </div>
+          <!-- Profile Badge Dropdown -->
+          <div class="dropdown">
+            <button class="btn d-flex align-items-center gap-2 p-1 border-0" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Profile panel">
+              <div class="profile-avatar-placeholder" id="userInitials" style="width: 40px; height: 40px; font-size: 1.1rem;">JS</div>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end card-premium" aria-labelledby="profileDropdown">
+              <li><div class="dropdown-header"><strong id="profileName">John Smith</strong><br><span class="text-muted" id="profileEmail" style="font-size: 0.75rem;">patient@hospital.com</span></div></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="medical-records.html"><i class="bi bi-person me-2"></i>My Medical Records</a></li>
+              <li><a class="dropdown-item text-danger" href="index.html"><i class="bi bi-box-arrow-left me-2"></i>Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Outstanding Payment Alert Banner -->
+      <section class="alert border-0 p-3 mb-4 card-premium" id="billingAlertBanner" style="display: none; background-color: var(--danger-light); border-left: 5px solid var(--danger); border-radius: var(--border-radius);">
+        <div class="d-flex flex-wrap justify-content-between align-items-center gap-3">
+          <div class="d-flex align-items-center gap-3">
+            <div class="d-inline-flex align-items-center justify-content-center text-danger" style="background-color: rgba(220, 53, 69, 0.15); width: 45px; height: 45px; border-radius: 50%;">
+              <i class="bi bi-credit-card-2-back-fill" style="font-size: 1.3rem;" aria-hidden="true"></i>
+            </div>
+            <div>
+              <h2 class="h6 mb-1 text-danger-emphasis fw-bold">Outstanding Payment Balance Due</h2>
+              <p class="mb-0 text-muted" style="font-size: 0.9rem;">You have an outstanding medical fee of <strong class="text-danger" id="bannerOutstandingAmount">Rs. 4,500</strong>. Please complete the settlement soon.</p>
+            </div>
+          </div>
+          <a href="payment.html" class="btn btn-danger btn-sm px-4 fw-bold" style="border-radius: 20px;">Pay Now</a>
+        </div>
+      </section>
+
+      <!-- Dashboard Layout Grid -->
+      <div class="row g-4">
+        
+        <!-- Left Side: Appointments & Prescriptions -->
+        <div class="col-lg-8">
+          
+          <!-- Upcoming Appointment -->
+          <section class="card card-premium p-4 mb-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h2 class="h5 mb-0">Upcoming Appointment</h2>
+              <a href="appointment.html" class="btn btn-primary btn-sm" style="border-radius: 20px; font-weight: 500;">
+                <i class="bi bi-plus-lg me-1"></i> Book New
+              </a>
+            </div>
+
+            <div id="appointmentDisplay">
+              <!-- Loaded dynamically from JS -->
+            </div>
+          </section>
+
+          <!-- Latest Prescription -->
+          <section class="card card-premium p-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <h2 class="h5 mb-0">Latest Prescription</h2>
+              <button class="btn btn-outline-primary btn-sm" id="downloadPrescriptionBtn" style="border-radius: 20px;" aria-label="Download latest prescription in PDF format">
+                <i class="bi bi-file-pdf me-1"></i> Download PDF
+              </button>
+            </div>
+
+            <div class="prescription-item flex-column flex-sm-row align-items-start align-items-sm-center gap-3">
+              <div>
+                <h3 class="h6 mb-1 fw-bold">Amoxicillin 500mg</h3>
+                <p class="text-muted mb-0" style="font-size: 0.85rem;">Take 1 capsule 3 times a day for 7 days (Post-meal)</p>
+              </div>
+              <span class="badge bg-primary px-3 py-2 text-white" style="font-size: 0.75rem; border-radius: 12px;">Active</span>
+            </div>
+
+            <div class="prescription-item flex-column flex-sm-row align-items-start align-items-sm-center gap-3">
+              <div>
+                <h3 class="h6 mb-1 fw-bold">Paracetamol 500mg</h3>
+                <p class="text-muted mb-0" style="font-size: 0.85rem;">Take 1 tablet every 6 hours as needed for fever/pain</p>
+              </div>
+              <span class="badge bg-secondary px-3 py-2 text-white" style="font-size: 0.75rem; border-radius: 12px;">As Needed</span>
+            </div>
+          </section>
+
+        </div>
+
+        <!-- Right Side: Health Summary & Lab Reports -->
+        <div class="col-lg-4">
+          
+          <!-- Medical Summary Cards -->
+          <section class="card card-premium p-4 mb-4">
+            <h2 class="h5 mb-3">Medical Summary</h2>
+            <div class="d-flex flex-column gap-3">
+              
+              <!-- Blood Group -->
+              <div class="d-flex align-items-center justify-content-between p-3 border rounded" style="background-color: var(--bg-body);">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="d-inline-flex align-items-center justify-content-center text-danger" style="background-color: rgba(220, 53, 69, 0.1); width: 40px; height: 40px; border-radius: 8px;">
+                    <i class="bi bi-droplet-fill" aria-hidden="true"></i>
+                  </div>
+                  <div>
+                    <span class="text-muted d-block" style="font-size: 0.8rem;">Blood Group</span>
+                    <strong class="h6 mb-0">A Positive (A+)</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Allergies -->
+              <div class="d-flex align-items-center justify-content-between p-3 border rounded" style="background-color: var(--bg-body);">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="d-inline-flex align-items-center justify-content-center text-warning" style="background-color: rgba(255, 193, 7, 0.1); width: 40px; height: 40px; border-radius: 8px;">
+                    <i class="bi bi-exclamation-triangle-fill" aria-hidden="true"></i>
+                  </div>
+                  <div>
+                    <span class="text-muted d-block" style="font-size: 0.8rem;">Allergies</span>
+                    <strong class="h6 mb-0">Penicillin</strong>
+                  </div>
+                </div>
+              </div>
+
+              <!-- BMI -->
+              <div class="d-flex align-items-center justify-content-between p-3 border rounded" style="background-color: var(--bg-body);">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="d-inline-flex align-items-center justify-content-center text-success" style="background-color: rgba(40, 167, 69, 0.1); width: 40px; height: 40px; border-radius: 8px;">
+                    <i class="bi bi-activity" aria-hidden="true"></i>
+                  </div>
+                  <div>
+                    <span class="text-muted d-block" style="font-size: 0.8rem;">BMI Ratio</span>
+                    <strong class="h6 mb-0">22.5 (Normal)</strong>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </section>
+
+          <!-- Recent Lab Reports -->
+          <section class="card card-premium p-4">
+            <h2 class="h5 mb-3">Recent Lab Reports</h2>
+            <div class="d-flex flex-column gap-2">
+              
+              <!-- Report item -->
+              <div class="lab-item flex-column flex-sm-row align-items-start align-items-sm-center gap-2">
+                <div>
+                  <h3 class="h6 mb-0 fw-bold">Complete Blood Count (CBC)</h3>
+                  <span class="text-muted" style="font-size: 0.75rem;">Issued: 10 July 2026</span>
+                </div>
+                <button class="btn btn-sm btn-link p-1 text-primary download-report" data-report="CBC" aria-label="Download CBC report"><i class="bi bi-download"></i></button>
+              </div>
+
+              <!-- Report item -->
+              <div class="lab-item flex-column flex-sm-row align-items-start align-items-sm-center gap-2">
+                <div>
+                  <h3 class="h6 mb-0 fw-bold">Fasting Blood Sugar</h3>
+                  <span class="text-muted" style="font-size: 0.75rem;">Issued: 08 July 2026</span>
+                </div>
+                <button class="btn btn-sm btn-link p-1 text-primary download-report" data-report="Fasting Blood Sugar" aria-label="Download Fasting Blood Sugar report"><i class="bi bi-download"></i></button>
+              </div>
+
+              <!-- Report item -->
+              <div class="lab-item flex-column flex-sm-row align-items-start align-items-sm-center gap-2">
+                <div>
+                  <h3 class="h6 mb-0 fw-bold">Lipid Profile Test</h3>
+                  <span class="text-muted" style="font-size: 0.75rem;">Issued: 02 July 2026</span>
+                </div>
+                <button class="btn btn-sm btn-link p-1 text-primary download-report" data-report="Lipid Profile" aria-label="Download Lipid Profile report"><i class="bi bi-download"></i></button>
+              </div>
+
+            </div>
+          </section>
+
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Page Loader -->
+  <div class="loader-wrapper" id="pageLoader" aria-hidden="true">
+    <div class="loader-spinner"></div>
+  </div>
+
+  <!-- Bootstrap 5 Bundle JS with Popper -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Page Logic Inline JavaScript -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Check session
+      let session = JSON.parse(localStorage.getItem('hms_session_user'));
+      if (!session || session.role !== 'patient') {
+        // For testing purposes, if no session, initialize a default Patient session
+        session = { name: 'John Smith', role: 'patient', email: 'patient@hospital.com' };
+        localStorage.setItem('hms_session_user', JSON.stringify(session));
+      }
+
+      // Update welcome name & initials
+      document.getElementById('welcomeUser').textContent = `Welcome Back, ${session.name}`;
+      document.getElementById('profileName').textContent = session.name;
+      document.getElementById('profileEmail').textContent = session.email;
+      
+      const initials = session.name.split(' ').map(n => n[0]).join('');
+      document.getElementById('userInitials').textContent = initials;
+
+      // Toggle mobile navigation sidebar
+      const sidebar = document.getElementById('sidebar');
+      const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+      const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+      if (mobileSidebarToggle && sidebar && sidebarOverlay) {
+        mobileSidebarToggle.addEventListener('click', () => {
+          sidebar.classList.toggle('show');
+          sidebarOverlay.classList.toggle('show');
+        });
+
+        sidebarOverlay.addEventListener('click', () => {
+          sidebar.classList.remove('show');
+          sidebarOverlay.classList.remove('show');
+        });
+      }
+
+      // Outstanding payment setup
+      const outstandingVal = parseFloat(localStorage.getItem('hms_outstanding_payment') || '4500');
+      const banner = document.getElementById('billingAlertBanner');
+      if (outstandingVal > 0 && banner) {
+        banner.style.display = 'block';
+        document.getElementById('bannerOutstandingAmount').textContent = `Rs. ${outstandingVal.toLocaleString()}`;
+      } else if (banner) {
+        banner.style.display = 'none';
+      }
+
+      // Load appointments
+      const appointments = JSON.parse(localStorage.getItem('hms_appointments')) || [];
+      const appDisplay = document.getElementById('appointmentDisplay');
+      
+      if (appointments.length === 0) {
+        appDisplay.innerHTML = `
+          <div class="text-center py-4 border rounded" style="background-color: var(--bg-body); border-style: dashed !important;">
+            <i class="bi bi-calendar-x text-muted" style="font-size: 2rem;"></i>
+            <p class="text-muted mt-2 mb-0">No upcoming appointments scheduled.</p>
+          </div>
+        `;
+      } else {
+        const primaryApp = appointments[0]; // Active appointment
+        
+        let dateObj = new Date(primaryApp.date);
+        const options = { day: 'numeric', month: 'long' };
+        let formattedDate = dateObj.toLocaleDateString('en-US', options); // e.g. "24 July"
+        if (isNaN(dateObj.getTime())) {
+          formattedDate = primaryApp.date;
+        }
+
+        appDisplay.innerHTML = `
+          <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center p-3 border rounded gap-3" style="background-color: var(--bg-body);">
+            <div class="d-flex align-items-center gap-3">
+              <div class="d-inline-flex align-items-center justify-content-center text-primary" style="background-color: var(--primary-light); width: 50px; height: 50px; border-radius: 10px;">
+                <i class="bi bi-person-heart-fill" style="font-size: 1.5rem;" aria-hidden="true"></i>
+              </div>
+              <div>
+                <strong class="h6 mb-1 d-block">${primaryApp.doctor}</strong>
+                <span class="text-muted" style="font-size: 0.85rem;">${primaryApp.department} &bull; ${primaryApp.reason || 'General Checkup'}</span>
+              </div>
+            </div>
+            
+            <div class="d-flex flex-wrap align-items-center gap-3">
+              <div class="text-md-end">
+                <span class="d-block fw-bold" style="font-size: 0.95rem; color: var(--text-main);"><i class="bi bi-calendar-check me-1"></i> ${formattedDate}</span>
+                <span class="text-muted" style="font-size: 0.85rem;"><i class="bi bi-clock me-1"></i> ${primaryApp.time}</span>
+              </div>
+              <span class="badge-status bg-success-light"><span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true" style="width: 8px; height: 8px;"></span>${primaryApp.status}</span>
+            </div>
+          </div>
+        `;
+      }
+
+      // Load notification list dropdown
+      const notifications = JSON.parse(localStorage.getItem('hms_notifications')) || [];
+      const notifList = document.getElementById('notificationList');
+      const bellBadge = document.getElementById('notifBellBadge');
+
+      if (notifications.length === 0) {
+        bellBadge.style.display = 'none';
+        notifList.innerHTML = `
+          <li class="p-3 text-center text-muted" style="font-size: 0.85rem;">
+            No new notifications.
+          </li>
+        `;
+      } else {
+        bellBadge.style.display = 'block';
+        notifList.innerHTML = notifications.map(n => `
+          <li class="notification-list-item">
+            <i class="bi bi-info-circle-fill text-primary" aria-hidden="true"></i>
+            <div>
+              <p class="mb-0 text-main fw-medium" style="font-size: 0.85rem; line-height: 1.3;">${n.text}</p>
+              <span class="text-muted" style="font-size: 0.75rem;">${n.time}</span>
+            </div>
+          </li>
+        `).join('');
+      }
+
+      // Clear notifications handler
+      const clearBtn = document.getElementById('clearNotifBtn');
+      if (clearBtn) {
+        clearBtn.addEventListener('click', (e) => {
+          e.stopPropagation(); // prevent closing dropdown
+          localStorage.setItem('hms_notifications', JSON.stringify([]));
+          bellBadge.style.display = 'none';
+          notifList.innerHTML = `
+            <li class="p-3 text-center text-muted" style="font-size: 0.85rem;">
+              No new notifications.
+            </li>
+          `;
+        });
+      }
+
+      // Global theme sync
+      const currentTheme = localStorage.getItem('hms_theme') || 'light';
+      document.documentElement.setAttribute('data-theme', currentTheme);
+      
+      const themeToggle = document.getElementById('themeToggle');
+      if (themeToggle) {
+        updateThemeToggleUI(themeToggle, currentTheme);
+        themeToggle.addEventListener('click', () => {
+          const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', theme);
+          localStorage.setItem('hms_theme', theme);
+          updateThemeToggleUI(themeToggle, theme);
+        });
+      }
+
+      function updateThemeToggleUI(btn, theme) {
+        const icon = btn.querySelector('i');
+        const text = btn.querySelector('span');
+        if (theme === 'dark') {
+          if (icon) icon.className = 'bi bi-sun-fill';
+          if (text) text.textContent = 'Light Mode';
+        } else {
+          if (icon) icon.className = 'bi bi-moon-fill';
+          if (text) text.textContent = 'Dark Mode';
+        }
+      }
+
+      // Simulated Downloads
+      function showSuccessToast(msg) {
+        let container = document.getElementById('toastContainer');
+        if (!container) {
+          container = document.createElement('div');
+          container.id = 'toastContainer';
+          container.className = 'custom-toast-container';
+          document.body.appendChild(container);
+        }
+        const toast = document.createElement('div');
+        toast.className = 'custom-toast toast-success';
+        toast.innerHTML = `
+          <i class="bi bi-check-circle-fill text-success" style="font-size: 1.25rem;"></i>
+          <div style="flex-grow: 1;">
+            <span style="font-weight: 600; display: block;">Success</span>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">${msg}</span>
+          </div>
+        `;
+        container.appendChild(toast);
+        setTimeout(() => toast.classList.add('show'), 100);
+        setTimeout(() => {
+          toast.classList.remove('show');
+          setTimeout(() => toast.remove(), 400);
+        }, 4000);
+      }
+
+      const dlPrescription = document.getElementById('downloadPrescriptionBtn');
+      if (dlPrescription) {
+        dlPrescription.addEventListener('click', () => {
+          const loader = document.getElementById('pageLoader');
+          if (loader) loader.classList.add('active');
+          setTimeout(() => {
+            if (loader) loader.classList.remove('active');
+            showSuccessToast('Prescription PDF download initiated successfully!');
+          }, 1000);
+        });
+      }
+
+      document.querySelectorAll('.download-report').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const rName = e.currentTarget.getAttribute('data-report');
+          const loader = document.getElementById('pageLoader');
+          if (loader) loader.classList.add('active');
+          setTimeout(() => {
+            if (loader) loader.classList.remove('active');
+            showSuccessToast(`${rName} report download started successfully.`);
+          }, 1000);
+        });
+      });
+
+      // Show welcome toast on page load once per session
+      if (!sessionStorage.getItem('hms_welcome_notified')) {
+        setTimeout(() => {
+          showSuccessToast(`Welcome to your portal, ${session.name}!`);
+          sessionStorage.setItem('hms_welcome_notified', 'true');
+        }, 1200);
+      }
+    });
+  </script>
+</body>
+</html>

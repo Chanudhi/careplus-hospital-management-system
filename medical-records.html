@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="View medical records, history of ailments, prescriptions, and doctor notes at CarePlus Hospital.">
+  <title>Medical Records - Hospital Management System</title>
+  <!-- Bootstrap 5 CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link href="css/style.css" rel="stylesheet">
+  <link href="css/dashboard.css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Mobile Responsive Top Header Bar -->
+  <header class="mobile-header">
+    <div class="d-flex align-items-center gap-2">
+      <i class="bi bi-heart-pulse-fill text-primary" style="font-size: 1.5rem;" aria-hidden="true"></i>
+      <span class="fw-bold" style="font-family: 'Outfit', sans-serif;">CarePlus</span>
+    </div>
+    <button class="mobile-toggle-btn" id="mobileSidebarToggle" aria-label="Toggle Navigation Sidebar">
+      <i class="bi bi-list"></i>
+    </button>
+  </header>
+
+  <!-- Sidebar Overlay for Mobile -->
+  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+  <div class="dashboard-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="d-inline-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); width: 35px; height: 35px; border-radius: 10px;">
+          <i class="bi bi-heart-pulse-fill text-white" style="font-size: 1.1rem;" aria-hidden="true"></i>
+        </div>
+        <h2 class="sidebar-brand">CarePlus</h2>
+      </div>
+
+      <nav class="sidebar-menu">
+        <a href="patient-dashboard.html" class="sidebar-link">
+          <i class="bi bi-grid-fill" aria-hidden="true"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="appointment.html" class="sidebar-link">
+          <i class="bi bi-calendar-event" aria-hidden="true"></i>
+          <span>Appointments</span>
+        </a>
+        <a href="medical-records.html" class="sidebar-link active" aria-current="page">
+          <i class="bi bi-file-earmark-medical" aria-hidden="true"></i>
+          <span>Medical Records</span>
+        </a>
+        <a href="payment.html" class="sidebar-link">
+          <i class="bi bi-credit-card" aria-hidden="true"></i>
+          <span>Payments</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="themeToggle" class="theme-toggle-btn w-100 justify-content-center" aria-label="Toggle Dark/Light Mode">
+          <i class="bi bi-moon-fill" aria-hidden="true"></i>
+          <span>Dark Mode</span>
+        </button>
+        <a href="index.html" class="sidebar-link text-danger logout-btn" id="logoutBtn" style="border: 1px solid var(--border-color); text-align: center; justify-content: center; gap: 8px;">
+          <i class="bi bi-box-arrow-left" aria-hidden="true"></i>
+          <span>Logout</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Page Header Overview -->
+      <section class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h1 class="h3 mb-1">Medical Records</h1>
+          <p class="text-muted mb-0">Confidential electronic health documentation file.</p>
+        </div>
+      </section>
+
+      <!-- Patient Vitals Summary Card -->
+      <section class="card card-premium p-4 mb-4">
+        <div class="row align-items-center g-3">
+          <div class="col-md-auto">
+            <div class="profile-avatar-placeholder" style="width: 72px; height: 72px; font-size: 2rem;">JS</div>
+          </div>
+          <div class="col-md">
+            <h2 class="h5 mb-1" id="patientNameDisplay">John Smith</h2>
+            <div class="d-flex flex-wrap gap-3 text-muted" style="font-size: 0.9rem;">
+              <span><strong>Age:</strong> 35 Years</span>
+              <span>&bull;</span>
+              <span><strong>Blood Group:</strong> A Positive (A+)</span>
+              <span>&bull;</span>
+              <span><strong>Height/Weight:</strong> 178cm / 71kg</span>
+            </div>
+          </div>
+          <div class="col-md-auto text-md-end">
+            <span class="badge bg-success px-3 py-2 text-white" style="border-radius: 20px;">Active Patient</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Medical Details Layout Grid -->
+      <div class="row g-4">
+        
+        <!-- Left Side: History & Medications -->
+        <div class="col-lg-7">
+          
+          <!-- Medical History -->
+          <div class="card card-premium p-4 mb-4">
+            <h3 class="h6 mb-3 fw-bold text-gradient"><i class="bi bi-shield-plus me-2"></i>Medical History</h3>
+            <ul class="list-group list-group-flush" style="color: var(--text-main);">
+              <li class="list-group-item bg-transparent d-flex justify-content-between align-items-center px-0">
+                <span>Hypertension (High Blood Pressure)</span>
+                <span class="badge bg-secondary-light text-secondary border border-secondary px-3 py-1" style="font-size: 0.75rem; border-radius: 12px;">Diagnosed 2023</span>
+              </li>
+              <li class="list-group-item bg-transparent d-flex justify-content-between align-items-center px-0">
+                <span>Asthma</span>
+                <span class="badge bg-secondary-light text-secondary border border-secondary px-3 py-1" style="font-size: 0.75rem; border-radius: 12px;">Mild/Seasonal</span>
+              </li>
+              <li class="list-group-item bg-transparent d-flex justify-content-between align-items-center px-0">
+                <span>Diabetes Type-II</span>
+                <span class="badge bg-secondary-light text-secondary border border-secondary px-3 py-1" style="font-size: 0.75rem; border-radius: 12px;">Controlled</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Current Medications -->
+          <div class="card card-premium p-4 mb-4">
+            <h3 class="h6 mb-3 fw-bold text-gradient"><i class="bi bi-capsule-capsule me-2"></i>Current Medication</h3>
+            <ul class="list-group list-group-flush" style="color: var(--text-main);">
+              <li class="list-group-item bg-transparent px-0">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <strong>Metformin 500mg</strong>
+                  <span class="badge bg-success-light text-success px-3 py-1" style="font-size: 0.75rem; border-radius: 12px;">Daily</span>
+                </div>
+                <span class="text-muted" style="font-size: 0.8rem;">1 tablet twice a day with meals. Controlled diabetes support.</span>
+              </li>
+              <li class="list-group-item bg-transparent px-0">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <strong>Vitamin D3 1000 IU</strong>
+                  <span class="badge bg-success-light text-success px-3 py-1" style="font-size: 0.75rem; border-radius: 12px;">Daily</span>
+                </div>
+                <span class="text-muted" style="font-size: 0.8rem;">1 capsule every morning. General bone health supplement.</span>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Doctor Checkup Notes -->
+          <div class="card card-premium p-4">
+            <h3 class="h6 mb-3 fw-bold text-gradient"><i class="bi bi-journal-text me-2"></i>Doctor Vitals & Notes</h3>
+            <div class="border rounded p-3" style="background-color: var(--bg-body);">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <strong style="font-size: 0.9rem;">Dr. Silva (Cardiology)</strong>
+                <span class="text-muted" style="font-size: 0.75rem;">Last visit: 08 July 2026</span>
+              </div>
+              <p class="mb-2" style="font-size: 0.85rem; line-height: 1.5;">"Patient shows steady blood pressure recovery. Pulse rates are within normal ranges. Metformin dose is adequate. Continue current medications and schedules. Follow-up consultation scheduled in 2 weeks."</p>
+              <div class="d-flex flex-wrap gap-3 border-top pt-2 mt-2" style="font-size: 0.8rem;">
+                <span class="text-muted"><strong>BP:</strong> 120/80 mmHg</span>
+                <span class="text-muted"><strong>Heart Rate:</strong> 72 bpm</span>
+                <span class="text-muted"><strong>SPO2:</strong> 99%</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Side: Lab Reports & Prescriptions -->
+        <div class="col-lg-5">
+          
+          <!-- Prescriptions PDF View -->
+          <div class="card card-premium p-4 mb-4">
+            <h3 class="h6 mb-3 fw-bold text-gradient"><i class="bi bi-file-earmark-pdf me-2"></i>Active Prescription</h3>
+            <div class="p-3 border rounded mb-3" style="background-color: var(--bg-body);">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <strong style="font-size: 0.85rem;">Prescription #RX-2026-094</strong>
+                <span class="text-muted" style="font-size: 0.75rem;">08 Jul 2026</span>
+              </div>
+              <div class="mb-2" style="font-size: 0.8rem;">
+                <div class="d-flex justify-content-between"><span>Amoxicillin 500mg</span><span class="text-muted">Qty: 21</span></div>
+                <div class="d-flex justify-content-between"><span>Paracetamol 500mg</span><span class="text-muted">Qty: 10</span></div>
+              </div>
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-primary btn-sm flex-grow-1 py-2" id="btnViewPresc" style="border-radius: 8px;"><i class="bi bi-eye me-1"></i> View Details</button>
+              <button class="btn btn-outline-primary btn-sm px-3" id="btnDownloadPresc" style="border-radius: 8px;" aria-label="Download Prescription PDF"><i class="bi bi-download"></i></button>
+            </div>
+          </div>
+
+          <!-- Lab Reports list -->
+          <div class="card card-premium p-4">
+            <h3 class="h6 mb-3 fw-bold text-gradient"><i class="bi bi-droplet me-2"></i>Lab Reports</h3>
+            <div class="d-flex flex-column gap-3">
+              
+              <!-- Report Row -->
+              <div class="d-flex justify-content-between align-items-center p-3 border rounded" style="background-color: var(--bg-body);">
+                <div>
+                  <strong class="d-block" style="font-size: 0.85rem;">Complete Blood Count (CBC)</strong>
+                  <span class="text-muted" style="font-size: 0.75rem;">Issued: 10 July 2026</span>
+                </div>
+                <button class="btn btn-sm btn-link p-1 text-primary download-report" data-report="CBC" aria-label="Download CBC report"><i class="bi bi-download" style="font-size: 1.25rem;"></i></button>
+              </div>
+
+              <!-- Report Row -->
+              <div class="d-flex justify-content-between align-items-center p-3 border rounded" style="background-color: var(--bg-body);">
+                <div>
+                  <strong class="d-block" style="font-size: 0.85rem;">Lipid Profile Test</strong>
+                  <span class="text-muted" style="font-size: 0.75rem;">Issued: 02 July 2026</span>
+                </div>
+                <button class="btn btn-sm btn-link p-1 text-primary download-report" data-report="Lipid Profile" aria-label="Download Lipid Profile report"><i class="bi bi-download" style="font-size: 1.25rem;"></i></button>
+              </div>
+
+              <!-- Report Row -->
+              <div class="d-flex justify-content-between align-items-center p-3 border rounded" style="background-color: var(--bg-body);">
+                <div>
+                  <strong class="d-block" style="font-size: 0.85rem;">Fasting Blood Sugar</strong>
+                  <span class="text-muted" style="font-size: 0.75rem;">Issued: 08 July 2026</span>
+                </div>
+                <button class="btn btn-sm btn-link p-1 text-primary download-report" data-report="Fasting Blood Sugar" aria-label="Download Fasting Blood Sugar report"><i class="bi bi-download" style="font-size: 1.25rem;"></i></button>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Simulated View prescription modal popup -->
+  <div class="modal fade" id="prescModal" tabindex="-1" aria-labelledby="prescModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content card-premium" style="border: 1px solid var(--border-color);">
+        <div class="modal-header border-bottom">
+          <h4 class="modal-title h5 text-gradient" id="prescModalLabel">Prescription Details</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close modal" style="filter: var(--theme-close-filter);"></button>
+        </div>
+        <div class="modal-body">
+          <div class="text-center mb-4">
+            <h5 class="h6 text-muted mb-1">CAREPLUS CLINICAL PRESCRIPTION</h5>
+            <span class="text-muted" style="font-size: 0.8rem;">Registration ID: HMS-092284</span>
+          </div>
+          <div class="mb-3">
+            <strong>Prescribed By:</strong> Dr. Silva (Cardiologist)
+          </div>
+          <div class="border-top border-bottom py-3 my-3">
+            <div class="mb-2"><strong>1. Amoxicillin 500mg (Antibiotic)</strong><br><small class="text-muted">Qty: 21 capsules | 1 capsule 3 times a day (Post-meal)</small></div>
+            <div><strong>2. Paracetamol 500mg (Analgesic)</strong><br><small class="text-muted">Qty: 10 tablets | 1 tablet every 6 hours as needed</small></div>
+          </div>
+          <div style="font-size: 0.85rem; color: var(--text-muted);">
+            Note: Discontinue Amoxicillin if allergies develop, and consult doctor immediately.
+          </div>
+        </div>
+        <div class="modal-footer border-top">
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary btn-sm" id="modalPrintPresc"><i class="bi bi-printer me-1"></i> Print</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page Loader -->
+  <div class="loader-wrapper" id="pageLoader" aria-hidden="true">
+    <div class="loader-spinner"></div>
+  </div>
+
+  <!-- Bootstrap 5 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Sidebars and theme toggle scripts -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Toggle sidebar
+      const sidebar = document.getElementById('sidebar');
+      const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+      const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+      if (mobileSidebarToggle && sidebar && sidebarOverlay) {
+        mobileSidebarToggle.addEventListener('click', () => {
+          sidebar.classList.toggle('show');
+          sidebarOverlay.classList.toggle('show');
+        });
+
+        sidebarOverlay.addEventListener('click', () => {
+          sidebar.classList.remove('show');
+          sidebarOverlay.classList.remove('show');
+        });
+      }
+
+      // Check session
+      let session = JSON.parse(localStorage.getItem('hms_session_user'));
+      if (session) {
+        document.getElementById('patientNameDisplay').textContent = session.name;
+      }
+
+      // Global theme sync
+      const currentTheme = localStorage.getItem('hms_theme') || 'light';
+      document.documentElement.setAttribute('data-theme', currentTheme);
+      
+      const themeToggle = document.getElementById('themeToggle');
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', theme);
+          localStorage.setItem('hms_theme', theme);
+          updateThemeToggleUI(themeToggle, theme);
+        });
+        updateThemeToggleUI(themeToggle, currentTheme);
+      }
+
+      function updateThemeToggleUI(btn, theme) {
+        const icon = btn.querySelector('i');
+        const text = btn.querySelector('span');
+        if (theme === 'dark') {
+          if (icon) icon.className = 'bi bi-sun-fill';
+          if (text) text.textContent = 'Light Mode';
+        } else {
+          if (icon) icon.className = 'bi bi-moon-fill';
+          if (text) text.textContent = 'Dark Mode';
+        }
+      }
+
+      // Prescription View Modal
+      const prescModal = new bootstrap.Modal(document.getElementById('prescModal'));
+      document.getElementById('btnViewPresc').addEventListener('click', () => {
+        prescModal.show();
+      });
+
+      document.getElementById('modalPrintPresc').addEventListener('click', () => {
+        window.print();
+      });
+
+      // Downloads simulated logic
+      function showSuccessToast(msg) {
+        let container = document.getElementById('toastContainer');
+        if (!container) {
+          container = document.createElement('div');
+          container.id = 'toastContainer';
+          container.className = 'custom-toast-container';
+          document.body.appendChild(container);
+        }
+        const toast = document.createElement('div');
+        toast.className = 'custom-toast toast-success';
+        toast.innerHTML = `
+          <i class="bi bi-check-circle-fill text-success" style="font-size: 1.25rem;"></i>
+          <div style="flex-grow: 1;">
+            <span style="font-weight: 600; display: block;">Success</span>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">${msg}</span>
+          </div>
+        `;
+        container.appendChild(toast);
+        setTimeout(() => toast.classList.add('show'), 100);
+        setTimeout(() => {
+          toast.classList.remove('show');
+          setTimeout(() => toast.remove(), 400);
+        }, 4000);
+      }
+
+      const dlPresc = document.getElementById('btnDownloadPresc');
+      if (dlPresc) {
+        dlPresc.addEventListener('click', () => {
+          const loader = document.getElementById('pageLoader');
+          if (loader) loader.classList.add('active');
+          setTimeout(() => {
+            if (loader) loader.classList.remove('active');
+            showSuccessToast('Prescription PDF download initiated successfully!');
+          }, 1000);
+        });
+      }
+
+      document.querySelectorAll('.download-report').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          const rName = e.currentTarget.getAttribute('data-report');
+          const loader = document.getElementById('pageLoader');
+          if (loader) loader.classList.add('active');
+          setTimeout(() => {
+            if (loader) loader.classList.remove('active');
+            showSuccessToast(`${rName} report download started successfully.`);
+          }, 1000);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

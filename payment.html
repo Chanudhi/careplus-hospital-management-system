@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Secure payments page for CarePlus Hospital billing services. pay using card or PayPal.">
+  <title>Payment Portal - Hospital Management System</title>
+  <!-- Bootstrap 5 CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link href="css/style.css" rel="stylesheet">
+  <link href="css/dashboard.css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Mobile Responsive Top Header Bar -->
+  <header class="mobile-header">
+    <div class="d-flex align-items-center gap-2">
+      <i class="bi bi-heart-pulse-fill text-primary" style="font-size: 1.5rem;" aria-hidden="true"></i>
+      <span class="fw-bold" style="font-family: 'Outfit', sans-serif;">CarePlus</span>
+    </div>
+    <button class="mobile-toggle-btn" id="mobileSidebarToggle" aria-label="Toggle Navigation Sidebar">
+      <i class="bi bi-list"></i>
+    </button>
+  </header>
+
+  <!-- Sidebar Overlay for Mobile -->
+  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+  <div class="dashboard-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="d-inline-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); width: 35px; height: 35px; border-radius: 10px;">
+          <i class="bi bi-heart-pulse-fill text-white" style="font-size: 1.1rem;" aria-hidden="true"></i>
+        </div>
+        <h2 class="sidebar-brand">CarePlus</h2>
+      </div>
+
+      <nav class="sidebar-menu">
+        <a href="patient-dashboard.html" class="sidebar-link">
+          <i class="bi bi-grid-fill" aria-hidden="true"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="appointment.html" class="sidebar-link">
+          <i class="bi bi-calendar-event" aria-hidden="true"></i>
+          <span>Appointments</span>
+        </a>
+        <a href="medical-records.html" class="sidebar-link">
+          <i class="bi bi-file-earmark-medical" aria-hidden="true"></i>
+          <span>Medical Records</span>
+        </a>
+        <a href="payment.html" class="sidebar-link active" aria-current="page">
+          <i class="bi bi-credit-card" aria-hidden="true"></i>
+          <span>Payments</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="themeToggle" class="theme-toggle-btn w-100 justify-content-center" aria-label="Toggle Dark/Light Mode">
+          <i class="bi bi-moon-fill" aria-hidden="true"></i>
+          <span>Dark Mode</span>
+        </button>
+        <a href="index.html" class="sidebar-link text-danger logout-btn" id="logoutBtn" style="border: 1px solid var(--border-color); text-align: center; justify-content: center; gap: 8px;">
+          <i class="bi bi-box-arrow-left" aria-hidden="true"></i>
+          <span>Logout</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Page Header Overview -->
+      <section class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h1 class="h3 mb-1">Billing & Outstanding Payment</h1>
+          <p class="text-muted mb-0">Secure billing settlements for treatment and lab checkups.</p>
+        </div>
+      </section>
+
+      <div class="row justify-content-center">
+        <div class="col-xl-8 col-lg-10">
+          
+          <!-- Summary Bill Card -->
+          <div class="card card-premium p-4 mb-4" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); border: none; color: #FFFFFF;">
+            <div class="d-flex justify-content-between align-items-center">
+              <div>
+                <span class="text-white-50 d-block mb-1" style="font-size: 0.95rem;">TOTAL OUTSTANDING AMOUNT</span>
+                <strong class="h2 mb-0 fw-bold" id="outstandingAmount">Rs. 4,500</strong>
+              </div>
+              <div class="d-inline-flex align-items-center justify-content-center text-white" style="background-color: rgba(255, 255, 255, 0.15); width: 60px; height: 60px; border-radius: 50%;">
+                <i class="bi bi-receipt-cutoff" style="font-size: 1.8rem;" aria-hidden="true"></i>
+              </div>
+            </div>
+          </div>
+
+          <!-- Checkout Form Section -->
+          <div class="card card-premium p-4 p-sm-5">
+            <h2 class="h5 mb-4 border-bottom pb-3"><i class="bi bi-shield-lock text-primary me-2"></i>Select Payment Method</h2>
+            
+            <!-- Payment tabs picker -->
+            <div class="d-flex gap-2 mb-4">
+              <button class="btn btn-outline-primary flex-grow-1 active py-2 border-2 d-flex justify-content-center align-items-center gap-2" type="button" id="cardTabBtn" style="border-radius: 8px; font-weight: 600;">
+                <i class="bi bi-credit-card-2-front"></i> Credit / Debit Card
+              </button>
+              <button class="btn btn-outline-primary flex-grow-1 py-2 border-2 d-flex justify-content-center align-items-center gap-2" type="button" id="paypalTabBtn" style="border-radius: 8px; font-weight: 600;">
+                <i class="bi bi-paypal"></i> PayPal Account
+              </button>
+            </div>
+
+            <!-- Single Form Wrapper for Card/PayPal submission -->
+            <form id="paymentForm" novalidate>
+              <input type="hidden" id="paymentMethod" value="card">
+
+              <!-- Card form inputs -->
+              <div id="cardFormSection">
+                <div class="row g-3">
+                  <!-- Name on Card -->
+                  <div class="col-12">
+                    <label for="cardName" class="form-label fw-medium">Cardholder Name</label>
+                    <input type="text" class="form-control" id="cardName" placeholder="John Smith" required>
+                    <span class="validation-error-msg" role="alert">Please enter cardholder name.</span>
+                  </div>
+
+                  <!-- Card Number -->
+                  <div class="col-12">
+                    <label for="cardNumber" class="form-label fw-medium">Card Number</label>
+                    <input type="text" class="form-control" id="cardNumber" placeholder="0000 0000 0000 0000" maxlength="19" required>
+                    <span class="validation-error-msg" role="alert">Please enter a valid 16-digit card number.</span>
+                  </div>
+
+                  <!-- Card Expiry -->
+                  <div class="col-sm-6">
+                    <label for="cardExpiry" class="form-label fw-medium">Expiration Date (MM/YY)</label>
+                    <input type="text" class="form-control" id="cardExpiry" placeholder="MM/YY" maxlength="5" required>
+                    <span class="validation-error-msg" role="alert">Please enter a valid expiration MM/YY date.</span>
+                  </div>
+
+                  <!-- Card CVV -->
+                  <div class="col-sm-6">
+                    <label for="cardCvv" class="form-label fw-medium">CVV / CVN</label>
+                    <input type="password" class="form-control" id="cardCvv" placeholder="3 digits" maxlength="3" required>
+                    <span class="validation-error-msg" role="alert">Please enter CVV (3 digits).</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- PayPal form inputs -->
+              <div id="paypalFormSection" style="display: none;">
+                <div class="col-12">
+                  <label for="paypalEmail" class="form-label fw-medium">PayPal Registered Email</label>
+                  <input type="email" class="form-control" id="paypalEmail" placeholder="paypal@example.com">
+                  <span class="validation-error-msg" role="alert">Please enter a valid PayPal account email.</span>
+                </div>
+              </div>
+
+              <!-- Submit button -->
+              <div class="d-flex justify-content-end gap-3 mt-4 pt-3 border-top">
+                <a href="patient-dashboard.html" class="btn btn-outline-secondary px-4 py-2" style="border-radius: 8px;">Cancel</a>
+                <button type="submit" class="btn btn-primary px-5 py-2" id="payBtn" style="border-radius: 8px; font-weight: 600;">Pay Now</button>
+              </div>
+
+            </form>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Success confirmation popup Modal -->
+  <div class="modal fade" id="successModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="successModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content card-premium text-center p-4" style="border: none;">
+        <div class="modal-body">
+          <div class="mb-4 text-success d-inline-flex align-items-center justify-content-center" style="background-color: var(--success-light); width: 80px; height: 80px; border-radius: 50%;">
+            <i class="bi bi-patch-check-fill" style="font-size: 3rem;" aria-hidden="true"></i>
+          </div>
+          <h3 class="h4 mb-2 fw-bold text-gradient" id="successModalLabel">Payment Completed Successfully</h3>
+          <p class="text-muted mb-4">Your invoice settlement has been cleared and recorded. A receipt has been sent to your registered email address.</p>
+          <button type="button" class="btn btn-success px-4 py-2 w-100 fw-bold" id="successModalClose" style="border-radius: 8px;">Back to Dashboard</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Page Loader -->
+  <div class="loader-wrapper" id="pageLoader" aria-hidden="true">
+    <div class="loader-spinner"></div>
+  </div>
+
+  <!-- Bootstrap 5 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Sidebar toggles & Theme configuration init script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Toggle sidebar
+      const sidebar = document.getElementById('sidebar');
+      const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+      const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+      if (mobileSidebarToggle && sidebar && sidebarOverlay) {
+        mobileSidebarToggle.addEventListener('click', () => {
+          sidebar.classList.toggle('show');
+          sidebarOverlay.classList.toggle('show');
+        });
+
+        sidebarOverlay.addEventListener('click', () => {
+          sidebar.classList.remove('show');
+          sidebarOverlay.classList.remove('show');
+        });
+      }
+
+      // Theme Sync
+      const currentTheme = localStorage.getItem('hms_theme') || 'light';
+      document.documentElement.setAttribute('data-theme', currentTheme);
+      
+      const themeToggle = document.getElementById('themeToggle');
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', theme);
+          localStorage.setItem('hms_theme', theme);
+          updateThemeToggleUI(themeToggle, theme);
+        });
+        updateThemeToggleUI(themeToggle, currentTheme);
+      }
+
+      function updateThemeToggleUI(btn, theme) {
+        const icon = btn.querySelector('i');
+        const text = btn.querySelector('span');
+        if (theme === 'dark') {
+          if (icon) icon.className = 'bi bi-sun-fill';
+          if (text) text.textContent = 'Light Mode';
+        } else {
+          if (icon) icon.className = 'bi bi-moon-fill';
+          if (text) text.textContent = 'Dark Mode';
+        }
+      }
+    });
+  </script>
+
+  <!-- Payment logic file -->
+  <script src="js/payment.js"></script>
+</body>
+</html>

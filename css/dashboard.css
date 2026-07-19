@@ -1,0 +1,318 @@
+/* Dashboard layout & Sidebar styling */
+.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Sidebar Styling */
+.sidebar {
+  width: 280px;
+  background-color: var(--sidebar-bg);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 1000;
+  transition: transform var(--transition-normal), background-color var(--transition-normal);
+}
+
+.sidebar-header {
+  padding: 24px;
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sidebar-logo {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.sidebar-brand {
+  font-family: 'Outfit', sans-serif;
+  font-weight: 700;
+  font-size: 1.25rem;
+  color: var(--text-main);
+  margin-bottom: 0;
+}
+
+.sidebar-menu {
+  list-style: none;
+  padding: 24px 16px;
+  margin: 0;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 12px 16px;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-weight: 500;
+  border-radius: var(--border-radius);
+  transition: all var(--transition-fast);
+}
+
+.sidebar-link i {
+  font-size: 1.2rem;
+  transition: transform var(--transition-fast);
+}
+
+.sidebar-link:hover {
+  color: var(--primary);
+  background-color: var(--primary-light);
+}
+
+.sidebar-link:hover i {
+  transform: translateX(4px);
+}
+
+.sidebar-link.active {
+  color: var(--primary);
+  background-color: var(--sidebar-active-bg);
+  font-weight: 600;
+}
+
+.sidebar-footer {
+  padding: 20px 24px;
+  border-top: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Main Content Area */
+.main-content {
+  flex-grow: 1;
+  margin-left: 280px;
+  padding: 40px;
+  min-height: 100vh;
+  transition: margin-left var(--transition-normal);
+}
+
+/* Mobile top bar toggle button */
+.mobile-header {
+  display: none;
+  background-color: var(--bg-card);
+  border-bottom: 1px solid var(--border-color);
+  padding: 16px 24px;
+  justify-content: space-between;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+}
+
+.mobile-toggle-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--text-main);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+}
+
+/* Badges for Appointment/Billing states */
+.badge-status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.badge-status.bg-success-light {
+  background-color: var(--success-light);
+  color: var(--success);
+}
+
+.badge-status.bg-danger-light {
+  background-color: var(--danger-light);
+  color: var(--danger);
+}
+
+.badge-status.bg-warning-light {
+  background-color: var(--warning-light);
+  color: var(--warning);
+}
+
+/* User summary profile cards & Quick Actions */
+.profile-summary-card {
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.profile-avatar-placeholder {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: #FFFFFF;
+  font-size: 1.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow-md);
+}
+
+/* Interactive Prescription Card & Lab Lists */
+.prescription-item, .lab-item {
+  border-left: 4px solid var(--primary);
+  padding: 16px;
+  background-color: var(--bg-body);
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: transform var(--transition-fast);
+}
+
+.prescription-item:hover, .lab-item:hover {
+  transform: scale(1.01);
+}
+
+/* Notification panel designs */
+.notification-bell-container {
+  position: relative;
+}
+
+.notification-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  width: 8px;
+  height: 8px;
+  background-color: var(--danger);
+  border-radius: 50%;
+}
+
+.notification-list-item {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 0.9rem;
+  display: flex;
+  align-items: start;
+  gap: 12px;
+}
+.notification-list-item:last-child {
+  border-bottom: none;
+}
+
+/* Charts container style */
+.chart-container-wrapper {
+  position: relative;
+  height: 320px;
+  width: 100%;
+}
+
+/* Sidebar overlay for mobile screens */
+.sidebar-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.4);
+  z-index: 998;
+}
+
+/* Mobile Responsiveness adjustments */
+@media (max-width: 991px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  .sidebar.show {
+    transform: translateX(0);
+  }
+  .main-content {
+    margin-left: 0;
+    padding: 24px 16px;
+  }
+  .mobile-header {
+    display: flex;
+  }
+  .sidebar-overlay.show {
+    display: block;
+  }
+}
+
+/* ================= DARK MODE DASHBOARD-SPECIFIC OVERRIDES ================= */
+
+/* Badge status pill colors — need explicit dark overrides */
+[data-theme="dark"] .badge-status.bg-success-light {
+  background-color: rgba(61, 217, 197, 0.2) !important;
+  color: #3DD9C5 !important;
+}
+[data-theme="dark"] .badge-status.bg-danger-light {
+  background-color: rgba(255, 107, 107, 0.2) !important;
+  color: #FF6B6B !important;
+}
+[data-theme="dark"] .badge-status.bg-warning-light {
+  background-color: rgba(255, 209, 102, 0.2) !important;
+  color: #FFD166 !important;
+}
+
+/* Prescription & lab list item rows */
+[data-theme="dark"] .prescription-item,
+[data-theme="dark"] .lab-item {
+  background-color: rgba(255,255,255,0.04) !important;
+  border-left-color: var(--primary) !important;
+}
+[data-theme="dark"] .prescription-item *,
+[data-theme="dark"] .lab-item * {
+  color: var(--text-main) !important;
+}
+
+/* Notification list items */
+[data-theme="dark"] .notification-list-item {
+  border-bottom-color: var(--border-color) !important;
+  color: var(--text-main) !important;
+}
+
+/* Mobile header in dark mode */
+[data-theme="dark"] .mobile-header {
+  background-color: var(--bg-card) !important;
+  border-bottom-color: var(--border-color) !important;
+}
+
+/* Sidebar in dark mode */
+[data-theme="dark"] .sidebar {
+  background-color: var(--sidebar-bg) !important;
+  border-right-color: var(--border-color) !important;
+}
+[data-theme="dark"] .sidebar-header {
+  border-bottom-color: var(--border-color) !important;
+}
+[data-theme="dark"] .sidebar-footer {
+  border-top-color: var(--border-color) !important;
+}
+[data-theme="dark"] .sidebar-link {
+  color: var(--text-muted) !important;
+}
+[data-theme="dark"] .sidebar-link:hover,
+[data-theme="dark"] .sidebar-link.active {
+  color: var(--primary) !important;
+  background-color: var(--sidebar-active-bg) !important;
+}

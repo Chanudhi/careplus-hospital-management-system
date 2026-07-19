@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Schedule online appointments at CarePlus Hospital. Choose departments, specialized doctors, and calendar dates.">
+  <title>Book Appointment - Hospital Management System</title>
+  <!-- Bootstrap 5 CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link href="css/style.css" rel="stylesheet">
+  <link href="css/dashboard.css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- Mobile Responsive Top Header Bar -->
+  <header class="mobile-header">
+    <div class="d-flex align-items-center gap-2">
+      <i class="bi bi-heart-pulse-fill text-primary" style="font-size: 1.5rem;" aria-hidden="true"></i>
+      <span class="fw-bold" style="font-family: 'Outfit', sans-serif;">CarePlus</span>
+    </div>
+    <button class="mobile-toggle-btn" id="mobileSidebarToggle" aria-label="Toggle Navigation Sidebar">
+      <i class="bi bi-list"></i>
+    </button>
+  </header>
+
+  <!-- Sidebar Overlay for Mobile -->
+  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+  <div class="dashboard-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="d-inline-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); width: 35px; height: 35px; border-radius: 10px;">
+          <i class="bi bi-heart-pulse-fill text-white" style="font-size: 1.1rem;" aria-hidden="true"></i>
+        </div>
+        <h2 class="sidebar-brand">CarePlus</h2>
+      </div>
+
+      <nav class="sidebar-menu">
+        <a href="patient-dashboard.html" class="sidebar-link">
+          <i class="bi bi-grid-fill" aria-hidden="true"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="appointment.html" class="sidebar-link active" aria-current="page">
+          <i class="bi bi-calendar-event" aria-hidden="true"></i>
+          <span>Appointments</span>
+        </a>
+        <a href="medical-records.html" class="sidebar-link">
+          <i class="bi bi-file-earmark-medical" aria-hidden="true"></i>
+          <span>Medical Records</span>
+        </a>
+        <a href="payment.html" class="sidebar-link">
+          <i class="bi bi-credit-card" aria-hidden="true"></i>
+          <span>Payments</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="themeToggle" class="theme-toggle-btn w-100 justify-content-center" aria-label="Toggle Dark/Light Mode">
+          <i class="bi bi-moon-fill" aria-hidden="true"></i>
+          <span>Dark Mode</span>
+        </button>
+        <a href="index.html" class="sidebar-link text-danger logout-btn" id="logoutBtn" style="border: 1px solid var(--border-color); text-align: center; justify-content: center; gap: 8px;">
+          <i class="bi bi-box-arrow-left" aria-hidden="true"></i>
+          <span>Logout</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Header overview -->
+      <section class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+          <h1 class="h3 mb-1">Book Appointment</h1>
+          <p class="text-muted mb-0">Schedule consultation sessions with medical specialists.</p>
+        </div>
+      </section>
+
+      <div class="row justify-content-center">
+        <div class="col-xl-8 col-lg-10">
+          
+          <!-- Booking Form Card -->
+          <div class="card card-premium p-4 p-sm-5">
+            <h2 class="h5 mb-4 border-bottom pb-3"><i class="bi bi-calendar-plus text-primary me-2"></i>Appointment Request Form</h2>
+            
+            <form id="bookingForm" novalidate>
+              <!-- Step Tracker (Visual & Screen Reader Friendly) -->
+              <nav aria-label="Booking steps" class="mb-4">
+                <ol class="d-flex justify-content-between list-unstyled p-3 rounded" style="background-color: var(--bg-body); border: 1px solid var(--border-color); font-size: 0.85rem;">
+                  <li class="d-flex align-items-center gap-2">
+                    <span class="badge bg-primary rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 24px; height: 24px;">1</span>
+                    <strong class="text-primary">Select Specialist</strong>
+                  </li>
+                  <li class="d-flex align-items-center gap-2 text-muted">
+                    <span class="badge bg-secondary rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 24px; height: 24px;">2</span>
+                    <span>Date & Time</span>
+                  </li>
+                  <li class="d-flex align-items-center gap-2 text-muted d-none d-sm-flex">
+                    <span class="badge bg-secondary rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 24px; height: 24px;">3</span>
+                    <span>Consultation Details</span>
+                  </li>
+                </ol>
+              </nav>
+
+              <div class="row g-4">
+                
+                <!-- Department Selection -->
+                <div class="col-md-6">
+                  <label for="department" class="form-label fw-semibold">1. Choose Department <span class="text-danger" aria-hidden="true">*</span></label>
+                  <select class="form-select" id="department" required aria-describedby="departmentHelp" aria-invalid="false">
+                    <option value="" disabled selected>-- Select Department --</option>
+                    <option value="Cardiology">Cardiology</option>
+                    <option value="Neurology">Neurology</option>
+                    <option value="Pediatrics">Pediatrics</option>
+                    <option value="Orthopedics">Orthopedics</option>
+                  </select>
+                  <div id="departmentHelp" class="form-text visually-hidden">Selecting a department loads available medical specialists.</div>
+                  <span class="validation-error-msg" id="departmentError" role="alert">Please select a department.</span>
+                </div>
+
+                <!-- Doctor Selection -->
+                <div class="col-md-6">
+                  <label for="doctor" class="form-label fw-semibold">2. Choose Specialist <span class="text-danger" aria-hidden="true">*</span></label>
+                  <select class="form-select" id="doctor" required disabled aria-describedby="doctorHelp" aria-invalid="false">
+                    <option value="" disabled selected>-- Choose Department First --</option>
+                  </select>
+                  <div id="doctorHelp" class="form-text visually-hidden">Select a doctor from the loaded department roster.</div>
+                  <span class="validation-error-msg" id="doctorError" role="alert">Please select a doctor.</span>
+                </div>
+
+                <!-- Appointment Date Selection -->
+                <div class="col-md-6">
+                  <label for="appointmentDate" class="form-label fw-semibold">3. Preferred Date <span class="text-danger" aria-hidden="true">*</span></label>
+                  <input type="date" class="form-control" id="appointmentDate" required aria-describedby="dateHelp" aria-invalid="false">
+                  <div id="dateHelp" class="form-text visually-hidden">Appointments must be scheduled for today or a future date.</div>
+                  <span class="validation-error-msg" id="dateError" role="alert">Please select a valid date.</span>
+                </div>
+
+                <!-- Appointment Time Selection -->
+                <div class="col-md-6">
+                  <label for="appointmentTime" class="form-label fw-semibold">4. Preferred Time Slot <span class="text-danger" aria-hidden="true">*</span></label>
+                  <select class="form-select" id="appointmentTime" required aria-describedby="timeHelp" aria-invalid="false">
+                    <option value="" disabled selected>-- Select Time Slot --</option>
+                    <option value="09:00 AM">09:00 AM (Morning)</option>
+                    <option value="10:30 AM">10:30 AM (Morning)</option>
+                    <option value="01:00 PM">01:00 PM (Afternoon)</option>
+                    <option value="02:30 PM">02:30 PM (Afternoon)</option>
+                  </select>
+                  <div id="timeHelp" class="form-text visually-hidden">Select an available 30-minute consultation window.</div>
+                  <span class="validation-error-msg" id="timeError" role="alert">Please select a time slot.</span>
+                </div>
+
+                <!-- Consultation Reason -->
+                <div class="col-12">
+                  <label for="reason" class="form-label fw-semibold">5. Reason for Appointment <span class="text-danger" aria-hidden="true">*</span></label>
+                  <input type="text" class="form-control" id="reason" placeholder="e.g., Routine cardiac follow-up, physical evaluation" required aria-describedby="reasonHelp" aria-invalid="false">
+                  <div id="reasonHelp" class="form-text visually-hidden">Provide a brief summary of symptoms or check-up objectives.</div>
+                  <span class="validation-error-msg" id="reasonError" role="alert">Please state the reason for consultation.</span>
+                </div>
+
+                <!-- Additional Notes -->
+                <div class="col-12">
+                  <label for="notes" class="form-label fw-semibold">Additional Notes (Optional)</label>
+                  <textarea class="form-control" id="notes" rows="3" placeholder="Mention any past diagnoses, active medications, or comments..." aria-describedby="notesHelp"></textarea>
+                  <div id="notesHelp" class="form-text visually-hidden">Include any reference files or detailed context for the medical staff.</div>
+                </div>
+
+              </div>
+
+              <!-- Submit button -->
+              <div class="d-flex justify-content-end gap-3 mt-4 pt-3 border-top">
+                <a href="patient-dashboard.html" class="btn btn-outline-secondary px-4 py-2" style="border-radius: 8px;">Cancel</a>
+                <button type="submit" class="btn btn-primary px-5 py-2" style="border-radius: 8px;">Confirm Booking</button>
+              </div>
+            </form>
+          </div>
+
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Page Loader -->
+  <div class="loader-wrapper" id="pageLoader" aria-hidden="true">
+    <div class="loader-spinner"></div>
+  </div>
+
+  <!-- Bootstrap 5 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Sidebar toggles & Theme configuration init script -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Toggle mobile nav sidebar
+      const sidebar = document.getElementById('sidebar');
+      const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+      const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+      if (mobileSidebarToggle && sidebar && sidebarOverlay) {
+        mobileSidebarToggle.addEventListener('click', () => {
+          sidebar.classList.toggle('show');
+          sidebarOverlay.classList.toggle('show');
+        });
+
+        sidebarOverlay.addEventListener('click', () => {
+          sidebar.classList.remove('show');
+          sidebarOverlay.classList.remove('show');
+        });
+      }
+
+      // Theme Sync
+      const currentTheme = localStorage.getItem('hms_theme') || 'light';
+      document.documentElement.setAttribute('data-theme', currentTheme);
+      
+      const themeToggle = document.getElementById('themeToggle');
+      if (themeToggle) {
+        themeToggle.addEventListener('click', () => {
+          const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+          document.documentElement.setAttribute('data-theme', theme);
+          localStorage.setItem('hms_theme', theme);
+          updateThemeToggleUI(themeToggle, theme);
+        });
+        updateThemeToggleUI(themeToggle, currentTheme);
+      }
+
+      function updateThemeToggleUI(btn, theme) {
+        const icon = btn.querySelector('i');
+        const text = btn.querySelector('span');
+        if (theme === 'dark') {
+          if (icon) icon.className = 'bi bi-sun-fill';
+          if (text) text.textContent = 'Light Mode';
+        } else {
+          if (icon) icon.className = 'bi bi-moon-fill';
+          if (text) text.textContent = 'Dark Mode';
+        }
+      }
+    });
+  </script>
+
+  <!-- Appointment logic file -->
+  <script src="js/appointment.js"></script>
+</body>
+</html>

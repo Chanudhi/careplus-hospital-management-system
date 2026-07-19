@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Administrator dashboard for the Hospital Management System. Track users, bookings, payments, and system analytics.">
+  <title>Admin Dashboard - Hospital Management System</title>
+  <!-- Bootstrap 5 CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <link href="css/style.css" rel="stylesheet">
+  <link href="css/dashboard.css" rel="stylesheet">
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- Mobile Responsive Top Header Bar -->
+  <header class="mobile-header">
+    <div class="d-flex align-items-center gap-2">
+      <i class="bi bi-heart-pulse-fill text-primary" style="font-size: 1.5rem;" aria-hidden="true"></i>
+      <span class="fw-bold" style="font-family: 'Outfit', sans-serif;">CarePlus</span>
+    </div>
+    <button class="mobile-toggle-btn" id="mobileSidebarToggle" aria-label="Toggle Navigation Sidebar">
+      <i class="bi bi-list"></i>
+    </button>
+  </header>
+
+  <!-- Sidebar Overlay for Mobile -->
+  <div class="sidebar-overlay" id="sidebarOverlay" aria-hidden="true"></div>
+
+  <div class="dashboard-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="d-inline-flex align-items-center justify-content-center" style="background: linear-gradient(135deg, var(--primary), var(--secondary)); width: 35px; height: 35px; border-radius: 10px;">
+          <i class="bi bi-heart-pulse-fill text-white" style="font-size: 1.1rem;" aria-hidden="true"></i>
+        </div>
+        <h2 class="sidebar-brand">CarePlus</h2>
+      </div>
+
+      <nav class="sidebar-menu">
+        <a href="#" class="sidebar-link active" data-target="dashboard" aria-current="page">
+          <i class="bi bi-grid-fill" aria-hidden="true"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="#" class="sidebar-link" data-target="users">
+          <i class="bi bi-people" aria-hidden="true"></i>
+          <span>Users</span>
+        </a>
+        <a href="#" class="sidebar-link" data-target="doctors">
+          <i class="bi bi-person-hearts" aria-hidden="true"></i>
+          <span>Doctors</span>
+        </a>
+        <a href="#" class="sidebar-link" data-target="patients">
+          <i class="bi bi-person-rolodex" aria-hidden="true"></i>
+          <span>Patients</span>
+        </a>
+        <a href="#" class="sidebar-link" data-target="appointments">
+          <i class="bi bi-calendar-check" aria-hidden="true"></i>
+          <span>Appointments</span>
+        </a>
+        <a href="#" class="sidebar-link" data-target="payments">
+          <i class="bi bi-credit-card-2-front" aria-hidden="true"></i>
+          <span>Payments</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <button id="themeToggle" class="theme-toggle-btn w-100 justify-content-center" aria-label="Toggle Dark/Light Mode">
+          <i class="bi bi-moon-fill" aria-hidden="true"></i>
+          <span>Dark Mode</span>
+        </button>
+        <a href="index.html" class="sidebar-link text-danger logout-btn" id="logoutBtn" style="border: 1px solid var(--border-color); text-align: center; justify-content: center; gap: 8px;">
+          <i class="bi bi-box-arrow-left" aria-hidden="true"></i>
+          <span>Logout</span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Top header overview -->
+      <section class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3 border-bottom pb-3">
+        <div>
+          <h1 class="h3 mb-1" id="adminDashboardTitle">Admin Dashboard</h1>
+          <p class="text-muted mb-0" id="adminDashboardSubtitle">System performance, statistics, and medical logs.</p>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+          <!-- Profile Badge Dropdown -->
+          <div class="dropdown">
+            <button class="btn d-flex align-items-center gap-2 p-1 border-0" type="button" id="profileDropdown" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Profile panel">
+              <div class="profile-avatar-placeholder" id="userInitials" style="width: 40px; height: 40px; font-size: 1.1rem; background: linear-gradient(135deg, var(--secondary), var(--primary));">AD</div>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end card-premium" aria-labelledby="profileDropdown">
+              <li><div class="dropdown-header"><strong>Admin User</strong><br><span class="text-muted" style="font-size: 0.75rem;">admin@hospital.com</span></div></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="index.html"><i class="bi bi-box-arrow-left me-2"></i>Logout</a></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= SECTION: DASHBOARD OVERVIEW ================= -->
+      <div id="section-dashboard" class="admin-section">
+        <!-- Grid of KPI Stats Cards -->
+        <section class="row g-4 mb-4">
+          <!-- Total Patients -->
+          <div class="col-sm-6 col-xl-3">
+            <div class="card card-premium stat-card">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <span class="text-muted fw-medium d-block mb-1" style="font-size: 0.9rem;">Total Patients</span>
+                  <strong class="h2 mb-0 fw-bold" id="kpiPatients">3,562</strong>
+                </div>
+                <div class="stat-icon" style="background-color: var(--primary-light); color: var(--primary);">
+                  <i class="bi bi-people-fill" aria-hidden="true"></i>
+                </div>
+              </div>
+              <div class="mt-3" style="font-size: 0.85rem;">
+                <span class="text-success fw-bold"><i class="bi bi-arrow-up-short"></i> +4.7%</span>
+                <span class="text-muted ms-1">vs last month</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Total Doctors -->
+          <div class="col-sm-6 col-xl-3">
+            <div class="card card-premium stat-card">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <span class="text-muted fw-medium d-block mb-1" style="font-size: 0.9rem;">Total Doctors</span>
+                  <strong class="h2 mb-0 fw-bold" id="kpiDoctors">89</strong>
+                </div>
+                <div class="stat-icon" style="background-color: var(--secondary-light); color: var(--secondary);">
+                  <i class="bi bi-person-plus-fill" aria-hidden="true"></i>
+                </div>
+              </div>
+              <div class="mt-3" style="font-size: 0.85rem;">
+                <span class="text-success fw-bold"><i class="bi bi-arrow-up-short"></i> +2.1%</span>
+                <span class="text-muted ms-1">vs last month</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Today's Appointments -->
+          <div class="col-sm-6 col-xl-3">
+            <div class="card card-premium stat-card">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <span class="text-muted fw-medium d-block mb-1" style="font-size: 0.9rem;">Today's Appts</span>
+                  <strong class="h2 mb-0 fw-bold" id="kpiAppointments">254</strong>
+                </div>
+                <div class="stat-icon" style="background-color: var(--warning-light); color: var(--warning);">
+                  <i class="bi bi-calendar2-check-fill" aria-hidden="true"></i>
+                </div>
+              </div>
+              <div class="mt-3" style="font-size: 0.85rem;">
+                <span class="text-danger fw-bold"><i class="bi bi-arrow-down-short"></i> -1.2%</span>
+                <span class="text-muted ms-1">vs yesterday</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Revenue -->
+          <div class="col-sm-6 col-xl-3">
+            <div class="card card-premium stat-card">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <span class="text-muted fw-medium d-block mb-1" style="font-size: 0.9rem;">Total Revenue</span>
+                  <strong class="h2 mb-0 fw-bold" id="kpiRevenue">Rs. 356K</strong>
+                </div>
+                <div class="stat-icon" style="background-color: var(--success-light); color: var(--success);">
+                  <i class="bi bi-wallet2" aria-hidden="true"></i>
+                </div>
+              </div>
+              <div class="mt-3" style="font-size: 0.85rem;">
+                <span class="text-success fw-bold"><i class="bi bi-arrow-up-short"></i> +8.5%</span>
+                <span class="text-muted ms-1">vs last week</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Charts Grid Section -->
+        <section class="row g-4 mb-4">
+          <!-- Monthly Revenue Chart -->
+          <div class="col-lg-8">
+            <div class="card card-premium p-4">
+              <h2 class="h5 mb-3">Revenue Overview (Rs.)</h2>
+              <div class="chart-container-wrapper">
+                <canvas id="revenueChart"></canvas>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Department Distribution Chart -->
+          <div class="col-lg-4">
+            <div class="card card-premium p-4">
+              <h2 class="h5 mb-3">Appointments by Department</h2>
+              <div class="chart-container-wrapper">
+                <canvas id="departmentChart"></canvas>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Bottom Lists Grid (Registrations, Logs, Complaints, Payments) -->
+        <section class="row g-4">
+          
+          <!-- Recent Registrations -->
+          <div class="col-lg-7">
+            <div class="card card-premium p-4 mb-4">
+              <h2 class="h5 mb-3">Recent Registrations Overview</h2>
+              <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" style="color: var(--text-main);">
+                  <thead>
+                    <tr class="text-muted" style="font-size: 0.85rem;">
+                      <th scope="col">Patient Name</th>
+                      <th scope="col">Registered Date</th>
+                      <th scope="col">Contact</th>
+                      <th scope="col">Status</th>
+                    </tr>
+                  </thead>
+                  <tbody style="font-size: 0.9rem;" id="recentRegistrationsTable">
+                    <!-- Dynamic registrations -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Side: System Logs & Complaints -->
+          <div class="col-lg-5">
+            <!-- System Logs -->
+            <div class="card card-premium p-4 mb-4">
+              <h2 class="h5 mb-3">System Logs</h2>
+              <div class="d-flex flex-column gap-2" style="max-height: 180px; overflow-y: auto; font-family: monospace; font-size: 0.8rem;">
+                <div class="p-2 border rounded" style="background-color: var(--bg-body);">
+                  <span class="text-primary">[22:24:16]</span> User <strong>admin@hospital.com</strong> logged in.
+                </div>
+                <div class="p-2 border rounded" style="background-color: var(--bg-body);">
+                  <span class="text-success">[21:10:45]</span> DB Backup succeeded: HMS_BACKUP_2026.sql
+                </div>
+                <div class="p-2 border rounded" style="background-color: var(--bg-body);">
+                  <span class="text-warning">[19:44:12]</span> Patient <strong>John Smith</strong> updated profile details.
+                </div>
+                <div class="p-2 border rounded" style="background-color: var(--bg-body);">
+                  <span class="text-primary">[18:30:00]</span> Doctor <strong>Dr. Silva</strong> registered check-out.
+                </div>
+              </div>
+            </div>
+
+            <!-- Latest Complaints -->
+            <div class="card card-premium p-4">
+              <h2 class="h5 mb-3">Latest Complaints</h2>
+              <div class="d-flex flex-column gap-3">
+                <div class="border rounded p-3" style="background-color: var(--bg-body);">
+                  <div class="d-flex justify-content-between align-items-center mb-1">
+                    <strong class="h6 mb-0 fw-bold" style="font-size: 0.9rem;">Portal Loading Speed</strong>
+                    <span class="badge bg-danger text-white" style="font-size: 0.65rem;">High Priority</span>
+                  </div>
+                  <p class="text-muted mb-0" style="font-size: 0.8rem;">"The payment gateway took too long to return to the dashboard page during checkout."</p>
+                  <div class="text-end mt-2" style="font-size: 0.75rem;">
+                    <span class="text-muted">By: Marcus H. &bull; 2 hours ago</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <!-- ================= SECTION: USERS ================= -->
+      <div id="section-users" class="admin-section d-none">
+        <div class="card card-premium p-4">
+          <div class="d-flex flex-wrap justify-content-between align-items-center mb-4 gap-3">
+            <div>
+              <h2 class="h5 mb-1">Hospital Accounts Registry</h2>
+              <p class="text-muted mb-0" style="font-size: 0.85rem;">System accounts for hospital staff, doctors, and nurses.</p>
+            </div>
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addUserModal" style="border-radius: 8px;">
+              <i class="bi bi-person-plus me-1"></i> Add Staff Account
+            </button>
+          </div>
+
+          <div class="mb-3">
+            <label for="searchUsersInput" class="sr-only">Search Users</label>
+            <input type="text" class="form-control" id="searchUsersInput" placeholder="Search by name, email, or role..." style="max-width: 350px;">
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" style="color: var(--text-main);">
+              <thead>
+                <tr class="text-muted" style="font-size: 0.85rem;">
+                  <th scope="col">Staff Member</th>
+                  <th scope="col">Email Address</th>
+                  <th scope="col">Account Role</th>
+                  <th scope="col">Created Date</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody style="font-size: 0.9rem;" id="usersTableBody">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SECTION: DOCTORS ================= -->
+      <div id="section-doctors" class="admin-section d-none">
+        <div class="card card-premium p-4">
+          <h2 class="h5 mb-1">Medical Specialists Directory</h2>
+          <p class="text-muted mb-3" style="font-size: 0.85rem;">Manage hospital medical officers, status indicators, and department listings.</p>
+          
+          <div class="mb-4">
+            <label for="searchDoctorsInput" class="sr-only">Search Doctors</label>
+            <input type="text" class="form-control" id="searchDoctorsInput" placeholder="Search doctors by name or department..." style="max-width: 350px;">
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" style="color: var(--text-main);">
+              <thead>
+                <tr class="text-muted" style="font-size: 0.85rem;">
+                  <th scope="col">Doctor Name</th>
+                  <th scope="col">Specialty/Dept</th>
+                  <th scope="col">Contact</th>
+                  <th scope="col">Availability Status</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody style="font-size: 0.9rem;" id="doctorsTableBody">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SECTION: PATIENTS ================= -->
+      <div id="section-patients" class="admin-section d-none">
+        <div class="card card-premium p-4">
+          <h2 class="h5 mb-1">Patients Registry</h2>
+          <p class="text-muted mb-3" style="font-size: 0.85rem;">Browse medical records and vital stats logs for active patients.</p>
+
+          <div class="mb-4">
+            <label for="searchPatientsInput" class="sr-only">Search Patients</label>
+            <input type="text" class="form-control" id="searchPatientsInput" placeholder="Search patients by name or blood group..." style="max-width: 350px;">
+          </div>
+
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" style="color: var(--text-main);">
+              <thead>
+                <tr class="text-muted" style="font-size: 0.85rem;">
+                  <th scope="col">Patient Name</th>
+                  <th scope="col">Age</th>
+                  <th scope="col">Blood Group</th>
+                  <th scope="col">Medications</th>
+                  <th scope="col">Ailment History</th>
+                  <th scope="col">Action</th>
+                </tr>
+              </thead>
+              <tbody style="font-size: 0.9rem;" id="patientsTableBody">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SECTION: APPOINTMENTS ================= -->
+      <div id="section-appointments" class="admin-section d-none">
+        <div class="card card-premium p-4">
+          <h2 class="h5 mb-1">Scheduled Appointments Roster</h2>
+          <p class="text-muted mb-4" style="font-size: 0.85rem;">Review and synchronize patient consultation slots scheduled in real-time.</p>
+
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" style="color: var(--text-main);">
+              <thead>
+                <tr class="text-muted" style="font-size: 0.85rem;">
+                  <th scope="col">Patient</th>
+                  <th scope="col">Doctor</th>
+                  <th scope="col">Department</th>
+                  <th scope="col">Appointment Date/Time</th>
+                  <th scope="col">Reason</th>
+                  <th scope="col">Status</th>
+                  <th scope="col">Actions</th>
+                </tr>
+              </thead>
+              <tbody style="font-size: 0.9rem;" id="appointmentsTableBody">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= SECTION: PAYMENTS ================= -->
+      <div id="section-payments" class="admin-section d-none">
+        <!-- Stats Summary grid inside payments -->
+        <section class="row g-4 mb-4">
+          <div class="col-md-4">
+            <div class="card card-premium p-3 border-left-success" style="border-left: 4px solid var(--success);">
+              <span class="text-muted d-block" style="font-size: 0.85rem;">Total Settlements</span>
+              <strong class="h4" id="payStatsSettled">Rs. 8,800</strong>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card card-premium p-3 border-left-danger" style="border-left: 4px solid var(--danger);">
+              <span class="text-muted d-block" style="font-size: 0.85rem;">Unpaid Dues Balance</span>
+              <strong class="h4" id="payStatsPending">Rs. 16,500</strong>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card card-premium p-3 border-left-primary" style="border-left: 4px solid var(--primary);">
+              <span class="text-muted d-block" style="font-size: 0.85rem;">Settled Transactions</span>
+              <strong class="h4" id="payStatsCount">3 Invoices</strong>
+            </div>
+          </div>
+        </section>
+
+        <div class="card card-premium p-4">
+          <h2 class="h5 mb-1">Billing Accounts & Invoices Ledger</h2>
+          <p class="text-muted mb-4" style="font-size: 0.85rem;">Transaction log history of patient collections, payment gateways, and pending invoice totals.</p>
+
+          <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0" style="color: var(--text-main);">
+              <thead>
+                <tr class="text-muted" style="font-size: 0.85rem;">
+                  <th scope="col">Invoice ID</th>
+                  <th scope="col">Patient Name</th>
+                  <th scope="col">Consultation/Details</th>
+                  <th scope="col">Amount</th>
+                  <th scope="col">Method</th>
+                  <th scope="col">Payment Date</th>
+                  <th scope="col">Status</th>
+                </tr>
+              </thead>
+              <tbody style="font-size: 0.9rem;" id="paymentsTableBody">
+                <!-- Loaded dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- Modal: Create staff user account -->
+  <div class="modal fade" id="addUserModal" tabindex="-1" aria-labelledby="addUserModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content card-premium" style="border: 1px solid var(--border-color);">
+        <div class="modal-header border-bottom">
+          <h4 class="modal-title h5 text-gradient" id="addUserModalLabel">Create Staff Account</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close modal" style="filter: var(--theme-close-filter);"></button>
+        </div>
+        <form id="addUserForm" novalidate>
+          <div class="modal-body">
+            <div class="mb-3">
+              <label for="modalStaffName" class="form-label">Full Name</label>
+              <input type="text" class="form-control" id="modalStaffName" required placeholder="e.g. Dr. Roberts, Nurse Clara">
+            </div>
+            <div class="mb-3">
+              <label for="modalStaffEmail" class="form-label">Email Address</label>
+              <input type="email" class="form-control" id="modalStaffEmail" required placeholder="name@hospital.com">
+            </div>
+            <div class="mb-3">
+              <label for="modalStaffRole" class="form-label">Account Role</label>
+              <select class="form-select" id="modalStaffRole" required>
+                <option value="" disabled selected>-- Select Role --</option>
+                <option value="Doctor">Doctor</option>
+                <option value="Nurse">Nurse</option>
+                <option value="Administrator">Administrator</option>
+              </select>
+            </div>
+          </div>
+          <div class="modal-footer border-top">
+            <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary btn-sm">Create Account</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: View patient health records -->
+  <div class="modal fade" id="patientRecordModal" tabindex="-1" aria-labelledby="patientRecordModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content card-premium" style="border: 1px solid var(--border-color);">
+        <div class="modal-header border-bottom">
+          <h4 class="modal-title h5 text-gradient" id="patientRecordModalLabel">Electronic Patient Health Record</h4>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close modal" style="filter: var(--theme-close-filter);"></button>
+        </div>
+        <div class="modal-body">
+          <div class="text-center mb-3">
+            <div class="profile-avatar-placeholder mx-auto mb-2" id="recAvatar" style="width: 50px; height: 50px; font-size: 1.4rem;">JS</div>
+            <h5 class="h6 mb-0" id="recPatientName">John Smith</h5>
+            <span class="text-muted" style="font-size: 0.8rem;" id="recPatientAge">Age: 35</span>
+          </div>
+
+          <div class="border rounded p-3 mb-3" style="background-color: var(--bg-body); font-size: 0.85rem;">
+            <div class="d-flex justify-content-between mb-1"><strong>Blood Group:</strong> <span id="recPatientBlood">A+</span></div>
+            <div class="d-flex justify-content-between mb-1"><strong>Vitals BP:</strong> <span id="recPatientBp">120/80 mmHg</span></div>
+            <div class="d-flex justify-content-between mb-1"><strong>Body Weight:</strong> <span id="recPatientWeight">71kg</span></div>
+            <div class="d-flex justify-content-between"><strong>Allergies:</strong> <span class="text-danger" id="recPatientAllergies">Penicillin</span></div>
+          </div>
+
+          <div class="mb-3" style="font-size: 0.85rem;">
+            <strong>Ailments History:</strong>
+            <p class="text-muted mb-1" id="recPatientHistory">Hypertension, Asthma, Diabetes</p>
+          </div>
+
+          <div style="font-size: 0.85rem;">
+            <strong>Current Active Medications:</strong>
+            <p class="text-muted mb-0" id="recPatientMeds">Metformin, Vitamin D</p>
+          </div>
+        </div>
+        <div class="modal-footer border-top">
+          <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Close File</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Global Custom Toast Container -->
+  <div id="toastContainer" class="custom-toast-container" aria-live="polite"></div>
+
+  <!-- Page Loader -->
+  <div class="loader-wrapper" id="pageLoader" aria-hidden="true">
+    <div class="loader-spinner"></div>
+  </div>
+
+  <!-- Bootstrap 5 Bundle JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Page Logic & Dynamic SPA rendering -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      
+      // Initialize dynamic hospital directories in localStorage
+      initializeDirectories();
+
+      // Setup dynamic panel routes & sidebar links
+      setupSPARoutes();
+
+      // Render all lists & components
+      renderAllViews();
+
+      // Setup list search filters
+      setupListFilters();
+
+      // Bind modal forms
+      bindModalSubmissions();
+
+      // Setup mobile menu drawers
+      setupMobileSidebar();
+
+      // Theme Sync
+      setupThemeSwitcher();
+
+      // ================= DATA SEEDING INITIALIZATION =================
+      function initializeDirectories() {
+        // Seeding staff users directory
+        const defaultUsers = [
+          { name: 'Admin User', email: 'admin@hospital.com', role: 'Administrator', status: 'Active', date: '2026-01-01' },
+          { name: 'Dr. Silva', email: 'doctor@hospital.com', role: 'Doctor', status: 'Active', date: '2026-01-10' },
+          { name: 'Nurse Clara', email: 'nurse@hospital.com', role: 'Nurse', status: 'Active', date: '2026-02-14' },
+          { name: 'John Smith', email: 'patient@hospital.com', role: 'Patient', status: 'Active', date: '2026-03-20' }
+        ];
+        if (!localStorage.getItem('hms_users')) {
+          localStorage.setItem('hms_users', JSON.stringify(defaultUsers));
+        }
+
+        // Seeding doctors roster directory
+        const defaultDoctors = [
+          { name: 'Dr. Silva', department: 'Cardiology', status: 'Available', email: 'silva@hospital.com', contact: '+94 77 111 2222' },
+          { name: 'Dr. Roberts', department: 'Cardiology', status: 'In Consultation', email: 'roberts@hospital.com', contact: '+94 77 333 4444' },
+          { name: 'Dr. Watson', department: 'Neurology', status: 'Available', email: 'watson@hospital.com', contact: '+94 77 555 6666' },
+          { name: 'Dr. Jenkins', department: 'Neurology', status: 'On Leave', email: 'jenkins@hospital.com', contact: '+94 77 777 8888' },
+          { name: 'Dr. Foster', department: 'Pediatrics', status: 'Available', email: 'foster@hospital.com', contact: '+94 77 999 0000' }
+        ];
+        if (!localStorage.getItem('hms_doctors')) {
+          localStorage.setItem('hms_doctors', JSON.stringify(defaultDoctors));
+        }
+
+        // Seeding patient registry records directory
+        const defaultPatients = [
+          { name: 'John Smith', age: 35, blood: 'A+', bp: '120/80', weight: '71kg', allergies: 'Penicillin', history: 'Hypertension, Asthma, Diabetes Type-II', medications: 'Metformin, Vitamin D' },
+          { name: 'Emily Lawson', age: 28, blood: 'O-', bp: '115/75', weight: '62kg', allergies: 'None', history: 'Seasonal Allergies', medications: 'None' },
+          { name: 'Marcus Harris', age: 42, blood: 'B+', bp: '130/85', weight: '88kg', allergies: 'Aspirin', history: 'Hypercholesterolemia', medications: 'Atorvastatin' },
+          { name: 'Sarah Cooper', age: 31, blood: 'AB+', bp: '118/72', weight: '58kg', allergies: 'Sulfa Drugs', history: 'Hypothyroidism', medications: 'Levothyroxine' }
+        ];
+        if (!localStorage.getItem('hms_patients')) {
+          localStorage.setItem('hms_patients', JSON.stringify(defaultPatients));
+        }
+
+        // Seeding billing ledger payments directory
+        const defaultPayments = [
+          { id: 'INV-1094', name: 'John Smith', treat: 'Cardiology Consultation', amount: 4500, method: 'PayPal', status: 'Paid', date: '2026-07-11' },
+          { id: 'INV-1093', name: 'Robert Downey', treat: 'Neurology Consultation', amount: 12000, method: 'Visa Card', status: 'Unpaid', date: '2026-07-10' },
+          { id: 'INV-1092', name: 'Jessica Alba', treat: 'Pediatrics Treatment', amount: 2800, method: 'MasterCard', status: 'Paid', date: '2026-07-09' },
+          { id: 'INV-1091', name: 'Emily Lawson', treat: 'General Checkup Check', amount: 1500, method: 'PayPal', status: 'Paid', date: '2026-07-09' }
+        ];
+        if (!localStorage.getItem('hms_payments')) {
+          localStorage.setItem('hms_payments', JSON.stringify(defaultPayments));
+        }
+
+        // Make sure outstanding payments sync updates on billing status
+        const outstandingVal = parseFloat(localStorage.getItem('hms_outstanding_payment') || '4500');
+        if (outstandingVal === 0) {
+          defaultPayments[0].status = 'Paid';
+          localStorage.setItem('hms_payments', JSON.stringify(defaultPayments));
+        } else {
+          defaultPayments[0].status = 'Unpaid';
+          localStorage.setItem('hms_payments', JSON.stringify(defaultPayments));
+        }
+      }
+
+      // ================= SPA DYNAMIC PAGE ROUTING =================
+      function setupSPARoutes() {
+        const sidebarLinks = document.querySelectorAll('.sidebar-link[data-target]');
+        const sections = document.querySelectorAll('.admin-section');
+        const headerTitle = document.getElementById('adminDashboardTitle');
+        const headerSubtitle = document.getElementById('adminDashboardSubtitle');
+
+        const routes = {
+          'dashboard': { title: 'Admin Overview', sub: 'System performance, statistics, and medical logs.' },
+          'users': { title: 'Staff Accounts Registry', sub: 'System directory of clinic admins, nurses, and staff.' },
+          'doctors': { title: 'Doctors Directory', sub: 'Medical roster status, departments, and specialties.' },
+          'patients': { title: 'Patient Registry', sub: 'Confidential patient directory and files directory access.' },
+          'appointments': { title: 'Appointments Roster', sub: 'Manage, schedule, and approve scheduled consultation sessions.' },
+          'payments': { title: 'Billing & Payments Ledger', sub: 'Accounts invoices ledger, payment statuses, and transaction details.' }
+        };
+
+        sidebarLinks.forEach(link => {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const target = link.getAttribute('data-target');
+
+            // Set active sidebar item classes
+            sidebarLinks.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+
+            // Toggle visibilities
+            sections.forEach(sec => {
+              if (sec.id === `section-${target}`) {
+                sec.classList.remove('d-none');
+              } else {
+                sec.classList.add('d-none');
+              }
+            });
+
+            // Update header title strings
+            if (routes[target]) {
+              headerTitle.textContent = routes[target].title;
+              headerSubtitle.textContent = routes[target].sub;
+            }
+
+            // Save active path
+            sessionStorage.setItem('hms_admin_active_tab', target);
+
+            // Re-render target panel values in case of state updates
+            renderAllViews();
+          });
+        });
+
+        // Restore active page view on window refresh
+        const activeTab = sessionStorage.getItem('hms_admin_active_tab') || 'dashboard';
+        const activeLink = document.querySelector(`.sidebar-link[data-target="${activeTab}"]`);
+        if (activeLink) {
+          activeLink.click();
+        }
+      }
+
+      // ================= LIST AND VIEW RENDERING MODULES =================
+      function renderAllViews() {
+        renderOverviewCounts();
+        renderRecentRegistrations();
+        renderUsersList();
+        renderDoctorsList();
+        renderPatientsList();
+        renderAppointmentsList();
+        renderPaymentsLedger();
+      }
+
+      function renderOverviewCounts() {
+        const patients = JSON.parse(localStorage.getItem('hms_patients')) || [];
+        const doctors = JSON.parse(localStorage.getItem('hms_doctors')) || [];
+        const appts = JSON.parse(localStorage.getItem('hms_appointments')) || [];
+        const payments = JSON.parse(localStorage.getItem('hms_payments')) || [];
+
+        // Count base values
+        document.getElementById('kpiPatients').textContent = patients.length + 3558; // Mock scale offset
+        document.getElementById('kpiDoctors').textContent = doctors.length + 84; 
+        document.getElementById('kpiAppointments').textContent = appts.length + 253;
+
+        let totalRevenue = 356000; // base revenue
+        payments.forEach(p => {
+          if (p.status === 'Paid') totalRevenue += p.amount;
+        });
+        document.getElementById('kpiRevenue').textContent = `Rs. ${(totalRevenue / 1000).toFixed(0)}K`;
+      }
+
+      function renderRecentRegistrations() {
+        const patients = JSON.parse(localStorage.getItem('hms_patients')) || [];
+        const recentTable = document.getElementById('recentRegistrationsTable');
+        
+        // Show up to 3 patients in recent registrations
+        recentTable.innerHTML = patients.slice(0, 3).map(p => {
+          const initials = p.name.split(' ').map(n => n[0]).join('');
+          return `
+            <tr>
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="profile-avatar-placeholder" style="width: 32px; height: 32px; font-size: 0.85rem;">${initials}</div>
+                  <span>${p.name}</span>
+                </div>
+              </td>
+              <td>11 July 2026</td>
+              <td>+94 77 123 4567</td>
+              <td><span class="badge-status bg-success-light" style="padding: 3px 8px; font-size: 0.65rem;">Active</span></td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      function renderUsersList() {
+        const users = JSON.parse(localStorage.getItem('hms_users')) || [];
+        const usersBody = document.getElementById('usersTableBody');
+        
+        usersBody.innerHTML = users.map(u => {
+          const initials = u.name.split(' ').map(n => n[0]).join('');
+          return `
+            <tr class="user-row-item">
+              <td>
+                <div class="d-flex align-items-center gap-2">
+                  <div class="profile-avatar-placeholder" style="width: 36px; height: 36px; font-size: 0.9rem;">${initials}</div>
+                  <span class="fw-medium text-name">${u.name}</span>
+                </div>
+              </td>
+              <td class="text-email">${u.email}</td>
+              <td class="text-role"><span class="badge bg-secondary-light text-secondary border px-3 py-1" style="font-size: 0.75rem; border-radius:12px;">${u.role}</span></td>
+              <td>${u.date}</td>
+              <td><span class="badge-status bg-success-light" style="padding: 3px 8px; font-size: 0.65rem;">${u.status}</span></td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      function renderDoctorsList() {
+        const doctors = JSON.parse(localStorage.getItem('hms_doctors')) || [];
+        const doctorsBody = document.getElementById('doctorsTableBody');
+
+        doctorsBody.innerHTML = doctors.map((d, index) => {
+          let statusBadgeClass = 'bg-success-light';
+          let statusTextClass = 'text-success';
+          if (d.status === 'In Consultation') {
+            statusBadgeClass = 'bg-warning-light';
+            statusTextClass = 'text-warning-emphasis';
+          } else if (d.status === 'On Leave') {
+            statusBadgeClass = 'bg-danger-light';
+            statusTextClass = 'text-danger';
+          }
+
+          return `
+            <tr class="doctor-row-item">
+              <td class="fw-medium text-name">${d.name}</td>
+              <td class="text-dept">${d.department}</td>
+              <td>${d.contact}</td>
+              <td>
+                <span class="badge-status ${statusBadgeClass}">${d.status}</span>
+              </td>
+              <td>
+                <button class="btn btn-outline-primary btn-sm btn-change-status" data-index="${index}" style="border-radius: 6px;">
+                  Toggle Status
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+        // Bind toggle status action
+        document.querySelectorAll('.btn-change-status').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const idx = parseInt(e.currentTarget.getAttribute('data-index'), 10);
+            const statuses = ['Available', 'In Consultation', 'On Leave'];
+            let currentIdx = statuses.indexOf(doctors[idx].status);
+            let nextIdx = (currentIdx + 1) % statuses.length;
+            
+            doctors[idx].status = statuses[nextIdx];
+            localStorage.setItem('hms_doctors', JSON.stringify(doctors));
+            showToast(`${doctors[idx].name} status updated to ${statuses[nextIdx]}.`, 'success');
+            renderDoctorsList();
+            renderOverviewCounts();
+          });
+        });
+      }
+
+      function renderPatientsList() {
+        const patients = JSON.parse(localStorage.getItem('hms_patients')) || [];
+        const patientsBody = document.getElementById('patientsTableBody');
+
+        patientsBody.innerHTML = patients.map((p, index) => {
+          return `
+            <tr class="patient-row-item">
+              <td class="fw-medium text-name">${p.name}</td>
+              <td>${p.age}</td>
+              <td class="text-blood"><span class="badge bg-danger-light text-danger" style="font-size:0.75rem;">${p.blood}</span></td>
+              <td>${p.medications}</td>
+              <td>${p.history}</td>
+              <td>
+                <button class="btn btn-outline-primary btn-sm btn-view-file" data-index="${index}" style="border-radius: 6px;">
+                  <i class="bi bi-file-earmark-person"></i> Open File
+                </button>
+              </td>
+            </tr>
+          `;
+        }).join('');
+
+        // Bind Open Patient File
+        document.querySelectorAll('.btn-view-file').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const idx = parseInt(e.currentTarget.getAttribute('data-index'), 10);
+            const patient = patients[idx];
+            
+            // Populating medical file fields in modal
+            document.getElementById('recPatientName').textContent = patient.name;
+            document.getElementById('recPatientAge').textContent = `Age: ${patient.age} Years`;
+            document.getElementById('recPatientBlood').textContent = patient.blood;
+            document.getElementById('recPatientBp').textContent = patient.bp + ' mmHg';
+            document.getElementById('recPatientWeight').textContent = patient.weight;
+            document.getElementById('recPatientAllergies').textContent = patient.allergies;
+            document.getElementById('recPatientHistory').textContent = patient.history;
+            document.getElementById('recPatientMeds').textContent = patient.medications;
+            
+            const initials = patient.name.split(' ').map(n => n[0]).join('');
+            document.getElementById('recAvatar').textContent = initials;
+
+            const recordModal = new bootstrap.Modal(document.getElementById('patientRecordModal'));
+            recordModal.show();
+          });
+        });
+      }
+
+      function renderAppointmentsList() {
+        const appointments = JSON.parse(localStorage.getItem('hms_appointments')) || [];
+        const appointmentsBody = document.getElementById('appointmentsTableBody');
+
+        if (appointments.length === 0) {
+          appointmentsBody.innerHTML = `
+            <tr>
+              <td colspan="7" class="text-center py-4 text-muted">No appointments recorded.</td>
+            </tr>
+          `;
+          return;
+        }
+
+        appointmentsBody.innerHTML = appointments.map((app, index) => {
+          let statusBadge = 'bg-success-light';
+          if (app.status === 'Cancelled' || app.status === 'Rejected') statusBadge = 'bg-danger-light';
+          else if (app.status === 'Pending') statusBadge = 'bg-warning-light';
+
+          let actionButtons = '';
+          if (app.status === 'Pending' || app.status === 'Approved') {
+            actionButtons = `
+              <div class="d-flex gap-1">
+                ${app.status === 'Pending' ? `<button class="btn btn-success btn-xs btn-approve" data-index="${index}" style="font-size:0.75rem; padding: 2px 6px;">Approve</button>` : ''}
+                <button class="btn btn-outline-danger btn-xs btn-cancel-appt" data-index="${index}" style="font-size:0.75rem; padding: 2px 6px;">Cancel</button>
+              </div>
+            `;
+          } else {
+            actionButtons = `<span class="text-muted" style="font-size: 0.8rem;">No action</span>`;
+          }
+
+          return `
+            <tr>
+              <td class="fw-medium">John Smith</td>
+              <td>${app.doctor}</td>
+              <td>${app.department}</td>
+              <td><strong>${app.date}</strong> &bull; ${app.time}</td>
+              <td><span style="font-size:0.8rem; color:var(--text-muted);">${app.reason || 'General'}</span></td>
+              <td><span class="badge-status ${statusBadge}">${app.status}</span></td>
+              <td>${actionButtons}</td>
+            </tr>
+          `;
+        }).join('');
+
+        // Bind dynamic approval/cancel events
+        document.querySelectorAll('.btn-approve').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const idx = parseInt(e.currentTarget.getAttribute('data-index'), 10);
+            appointments[idx].status = 'Approved';
+            localStorage.setItem('hms_appointments', JSON.stringify(appointments));
+            showToast(`Appointment approved for ${appointments[idx].doctor}.`, 'success');
+            renderAppointmentsList();
+            renderOverviewCounts();
+          });
+        });
+
+        document.querySelectorAll('.btn-cancel-appt').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            const idx = parseInt(e.currentTarget.getAttribute('data-index'), 10);
+            appointments[idx].status = 'Cancelled';
+            localStorage.setItem('hms_appointments', JSON.stringify(appointments));
+            showToast(`Appointment cancelled for ${appointments[idx].doctor}.`, 'danger');
+            renderAppointmentsList();
+            renderOverviewCounts();
+          });
+        });
+      }
+
+      function renderPaymentsLedger() {
+        const payments = JSON.parse(localStorage.getItem('hms_payments')) || [];
+        const paymentsBody = document.getElementById('paymentsTableBody');
+
+        paymentsBody.innerHTML = payments.map(p => {
+          let badgeClass = p.status === 'Paid' ? 'bg-success-light' : 'bg-danger-light';
+          return `
+            <tr>
+              <td><strong>${p.id}</strong></td>
+              <td>${p.name}</td>
+              <td>${p.treat}</td>
+              <td class="fw-semibold">Rs. ${p.amount.toLocaleString()}</td>
+              <td>${p.method || 'Visa'}</td>
+              <td>${p.date}</td>
+              <td><span class="badge-status ${badgeClass}">${p.status}</span></td>
+            </tr>
+          `;
+        }).join('');
+
+        // Update payment summary widgets
+        let totalPaid = 0;
+        let totalUnpaid = 0;
+        let countPaidInvoices = 0;
+
+        payments.forEach(p => {
+          if (p.status === 'Paid') {
+            totalPaid += p.amount;
+            countPaidInvoices++;
+          } else {
+            totalUnpaid += p.amount;
+          }
+        });
+
+        document.getElementById('payStatsSettled').textContent = `Rs. ${totalPaid.toLocaleString()}`;
+        document.getElementById('payStatsPending').textContent = `Rs. ${totalUnpaid.toLocaleString()}`;
+        document.getElementById('payStatsCount').textContent = `${countPaidInvoices} Invoices Paid`;
+      }
+
+      // ================= SEARCH FILTERS MODULES =================
+
+      // Helper: show/hide a "no results" empty-state row inside a tbody
+      function manageEmptyState(tbody, query, colSpan = 5) {
+        const existingEmpty = tbody.querySelector('.empty-state-row');
+
+        // Count visible data rows
+        const visibleRows = [...tbody.querySelectorAll('tr:not(.empty-state-row)')]
+          .filter(r => !r.classList.contains('d-none'));
+
+        if (visibleRows.length === 0 && query.length > 0) {
+          if (!existingEmpty) {
+            const emptyRow = document.createElement('tr');
+            emptyRow.className = 'empty-state-row';
+            emptyRow.innerHTML = `
+              <td colspan="${colSpan}" class="text-center py-5">
+                <div class="d-flex flex-column align-items-center gap-2" style="color: var(--text-muted);">
+                  <i class="bi bi-search" style="font-size: 2.5rem; opacity: 0.4;"></i>
+                  <span style="font-size: 1rem; font-weight: 600; color: var(--text-muted);">No matching records found</span>
+                  <span style="font-size: 0.85rem; color: var(--text-muted); opacity: 0.7;">Try a different search term or clear the field to see all entries.</span>
+                </div>
+              </td>
+            `;
+            tbody.appendChild(emptyRow);
+          }
+        } else {
+          if (existingEmpty) existingEmpty.remove();
+        }
+      }
+
+      function setupListFilters() {
+        // ── Users filter ──
+        const searchUsers = document.getElementById('searchUsersInput');
+        if (searchUsers) {
+          searchUsers.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            const tbody = document.getElementById('usersTableBody');
+            document.querySelectorAll('.user-row-item').forEach(row => {
+              const name  = row.querySelector('.text-name').textContent.toLowerCase();
+              const email = row.querySelector('.text-email').textContent.toLowerCase();
+              const role  = row.querySelector('.text-role').textContent.toLowerCase();
+              const match = name.includes(query) || email.includes(query) || role.includes(query);
+              row.classList.toggle('d-none', !match);
+            });
+            manageEmptyState(tbody, query, 5);
+          });
+        }
+
+        // ── Doctors filter ──
+        const searchDoctors = document.getElementById('searchDoctorsInput');
+        if (searchDoctors) {
+          searchDoctors.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            const tbody = document.getElementById('doctorsTableBody');
+            document.querySelectorAll('.doctor-row-item').forEach(row => {
+              const name = row.querySelector('.text-name').textContent.toLowerCase();
+              const dept = row.querySelector('.text-dept').textContent.toLowerCase();
+              const match = name.includes(query) || dept.includes(query);
+              row.classList.toggle('d-none', !match);
+            });
+            manageEmptyState(tbody, query, 5);
+          });
+        }
+
+        // ── Patients filter ──
+        const searchPatients = document.getElementById('searchPatientsInput');
+        if (searchPatients) {
+          searchPatients.addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase().trim();
+            const tbody = document.getElementById('patientsTableBody');
+            document.querySelectorAll('.patient-row-item').forEach(row => {
+              const name  = row.querySelector('.text-name').textContent.toLowerCase();
+              const blood = row.querySelector('.text-blood').textContent.toLowerCase();
+              const match = name.includes(query) || blood.includes(query);
+              row.classList.toggle('d-none', !match);
+            });
+            manageEmptyState(tbody, query, 6);
+          });
+        }
+      }
+
+      // ================= MODAL SUBMISSION HANDLERS =================
+      function bindModalSubmissions() {
+        const addStaffForm = document.getElementById('addUserForm');
+        if (addStaffForm) {
+          addStaffForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const nameVal = document.getElementById('modalStaffName').value.trim();
+            const emailVal = document.getElementById('modalStaffEmail').value.trim();
+            const roleVal = document.getElementById('modalStaffRole').value;
+
+            if (!nameVal || !emailVal || !roleVal) {
+              showToast('Please fill out all staff fields.', 'danger');
+              return;
+            }
+
+            const users = JSON.parse(localStorage.getItem('hms_users')) || [];
+            const newUser = {
+              name: nameVal,
+              email: emailVal,
+              role: roleVal,
+              status: 'Active',
+              date: new Date().toISOString().split('T')[0]
+            };
+
+            users.push(newUser);
+            localStorage.setItem('hms_users', JSON.stringify(users));
+
+            // Also add to Doctors roster in case a Doctor is created
+            if (roleVal === 'Doctor') {
+              const doctors = JSON.parse(localStorage.getItem('hms_doctors')) || [];
+              doctors.push({
+                name: nameVal,
+                department: 'General Medicine',
+                status: 'Available',
+                email: emailVal,
+                contact: '+94 77 000 0000'
+              });
+              localStorage.setItem('hms_doctors', JSON.stringify(doctors));
+            }
+
+            showToast(`Account successfully created for ${nameVal}.`, 'success');
+            
+            // Dismiss modal
+            const userModalEl = document.getElementById('addUserModal');
+            const userModal = bootstrap.Modal.getInstance(userModalEl);
+            if (userModal) userModal.hide();
+            
+            // Clean inputs
+            addStaffForm.reset();
+            
+            // Re-render
+            renderAllViews();
+          });
+        }
+      }
+
+      // ================= TOAST SYSTEM HELPER =================
+      function showToast(message, type = 'info') {
+        let container = document.getElementById('toastContainer');
+        const toast = document.createElement('div');
+        toast.className = `custom-toast toast-${type}`;
+        
+        let iconClass = 'bi-info-circle-fill';
+        if (type === 'success') iconClass = 'bi-check-circle-fill';
+        if (type === 'danger') iconClass = 'bi-exclamation-triangle-fill';
+
+        toast.innerHTML = `
+          <i class="bi ${iconClass}" style="font-size: 1.25rem;"></i>
+          <div style="flex-grow: 1;">
+            <span style="font-weight: 600; display: block;">HMS Info</span>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">${message}</span>
+          </div>
+        `;
+        container.appendChild(toast);
+        setTimeout(() => toast.classList.add('show'), 100);
+        setTimeout(() => {
+          toast.classList.remove('show');
+          setTimeout(() => toast.remove(), 400);
+        }, 4000);
+      }
+
+      // ================= MOBILE NAVIGATION DRAWER =================
+      function setupMobileSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        const mobileSidebarToggle = document.getElementById('mobileSidebarToggle');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        if (mobileSidebarToggle && sidebar && sidebarOverlay) {
+          mobileSidebarToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('show');
+            sidebarOverlay.classList.toggle('show');
+          });
+
+          sidebarOverlay.addEventListener('click', () => {
+            sidebar.classList.remove('show');
+            sidebarOverlay.classList.remove('show');
+          });
+        }
+      }
+
+      // ================= THEME CONTROLLER SWITCHER =================
+      function setupThemeSwitcher() {
+        const currentTheme = localStorage.getItem('hms_theme') || 'light';
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        
+        const themeToggle = document.getElementById('themeToggle');
+        if (themeToggle) {
+          updateThemeToggleUI(themeToggle, currentTheme);
+          themeToggle.addEventListener('click', () => {
+            const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('hms_theme', theme);
+            updateThemeToggleUI(themeToggle, theme);
+            
+            // Re-render Chart colors
+            setTimeout(() => window.location.reload(), 150);
+          });
+        }
+
+        function updateThemeToggleUI(btn, theme) {
+          const icon = btn.querySelector('i');
+          const text = btn.querySelector('span');
+          if (theme === 'dark') {
+            if (icon) icon.className = 'bi bi-sun-fill';
+            if (text) text.textContent = 'Light Mode';
+          } else {
+            if (icon) icon.className = 'bi bi-moon-fill';
+            if (text) text.textContent = 'Dark Mode';
+          }
+        }
+      }
+
+      // ================= CHARTS AND ANALYTICS INITIALIZATION =================
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      const textPrimaryColor = isDark ? '#F1F5F9' : '#1A2530';
+      const gridBorderColor = isDark ? '#24324D' : '#E2E8F0';
+
+      // 1. Revenue Line Chart
+      const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+      new Chart(revenueCtx, {
+        type: 'line',
+        data: {
+          labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+          datasets: [{
+            label: 'Monthly Revenue (Rs.)',
+            data: [150000, 220000, 180000, 290000, 310000, 280000, 356000],
+            borderColor: '#0066CC',
+            backgroundColor: 'rgba(0, 102, 204, 0.1)',
+            fill: true,
+            tension: 0.4,
+            borderWidth: 3,
+            pointBackgroundColor: '#00A99D',
+            pointBorderColor: '#FFF',
+            pointRadius: 5
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              labels: { color: textPrimaryColor, font: { family: 'Inter' } }
+            }
+          },
+          scales: {
+            x: {
+              grid: { color: gridBorderColor },
+              ticks: { color: textPrimaryColor }
+            },
+            y: {
+              grid: { color: gridBorderColor },
+              ticks: { color: textPrimaryColor }
+            }
+          }
+        }
+      });
+
+      // 2. Department Doughnut Chart
+      const deptCtx = document.getElementById('departmentChart').getContext('2d');
+      new Chart(deptCtx, {
+        type: 'doughnut',
+        data: {
+          labels: ['Cardiology', 'Neurology', 'Pediatrics', 'Orthopedics', 'General Medicine'],
+          datasets: [{
+            data: [80, 54, 45, 35, 40],
+            backgroundColor: [
+              '#0066CC', // Primary Blue
+              '#00A99D', // Teal
+              '#FFC107', // Yellow
+              '#DC3545', // Red
+              '#28A745'  // Green
+            ],
+            borderWidth: isDark ? 2 : 1,
+            borderColor: isDark ? '#151F32' : '#FFF'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { color: textPrimaryColor, font: { family: 'Inter', size: 11 } }
+            }
+          }
+        }
+      });
+    });
+  </script>
+</body>
+</html>
